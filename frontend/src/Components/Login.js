@@ -11,6 +11,8 @@ export const Login = () => {
     e.preventDefault();
     try {
       const data = await loginUser(email, password);
+      localStorage.setItem("token",data.token)
+
       alert(data.message);
       navigate("/dashboard")
     } catch (err) {
@@ -31,9 +33,9 @@ export const Login = () => {
           value={password} onChange={(e) => setPassword(e.target.value)} required 
         />
         <button type="submit">Login</button>
-        <a href="/register">Not registered yet?</a>
+      <Link to="/register">Not registered yet?</Link>
       </form>
-      <p>No account?<Link to="/register">Register here</Link></p>
+     
     </div>
   );
 };

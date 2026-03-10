@@ -11,3 +11,14 @@ export const loginUser = async (email, password) => {
   const response = await axios.post(`${API_URL}/login`, { email, password });
   return response.data;
 };
+
+export const getDashboard=async()=>{
+  const token=localStorage.getItem("token")
+  const response = await axios.get(`${API_URL}/dashboard`, { 
+    headers:{
+      Authorization:"Bearer"+token
+    }
+      });
+    return response.data;
+ 
+}
