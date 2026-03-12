@@ -9,7 +9,7 @@ exports.register = async (req, res) => {
 
 
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: "User already exists" });
+    if (existingUser) return res.status(400).json({ success:false,message: "User already exists",data:null });
 
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -17,10 +17,10 @@ exports.register = async (req, res) => {
 
     const user = await User.create({ email, password: hashedPassword });
 
-    res.status(201).json({ message: "User created", user });
+    res.status(201).json({ success:true,message: "User registered", data:{id:user._id,email:user.email} });
   } catch (err) {
-  console.log("Register Error:", err.message);  
-  res.status(500).json({ error: err.message });
+  
+  res.status(500).json({ success:false,message: err.message ,data:null});
 }
 };
 
@@ -31,11 +31,11 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+    if (!user) return res.status(400).json({ success:false,message: "User not found",data:null });
 
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+    if (!isMatch) return res.status(400).json({ success:false,message: "Invalid credentials",data:null });
 
     const token=jwt.sign(
       {userId:user._id}, //(data stored inside token)
@@ -43,14 +43,17 @@ exports.login = async (req, res) => {
   {expiresIn:"1h"}    )
 
 
-     res.json({
-      message: "Login successful",
-      token,
-   
+     res.status(200).json({
+      success:true,
+      message:"Login successful",
+      data:{
+        user:{id:user._id,email:user.email} ,
+        token
+      }
     });
 
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ success:false,message: err.message,data:null });
   }
 };
 
@@ -58,13 +61,14 @@ exports.getDashboard = async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).select("-password");
 
-    res.json({
+    res.status(200).json({
+      success:true,
       message: "Dashboard data",
-      user
+      data:user
     });
 
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ success:false,message: "Server error",data:null });
   }
 };
 
