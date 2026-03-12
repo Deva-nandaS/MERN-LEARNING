@@ -22,10 +22,12 @@ export const Login = () => {
   };
 
   return (
-    <div>
-      <h4 className="flex justify-center text-black font-semibold text-2xl ">Sign In</h4>
-      <form className="sm (640px)" onSubmit={handleSubmit}>
-        <input 
+    <div className=" justify-end items-center">
+      <form  onSubmit={handleSubmit}>
+        <h4 className="flex item-end text-black text-2xl mt-3 ">Sign In</h4>
+        <p>Not registered yet?</p>
+        <Link to="/register" className="text-blue-500 mt-4">Sign Up</Link>
+        <input  className=""
           type="email" placeholder="Email" 
           value={email} onChange={(e) => setEmail(e.target.value)} required 
         />
@@ -34,7 +36,7 @@ export const Login = () => {
           value={password} onChange={(e) => setPassword(e.target.value)} required 
         />
         <Button text="SIGN IN" type="submit"/>
-      <Link to="/register">Not registered yet?</Link>
+
       </form>
      
     </div>
