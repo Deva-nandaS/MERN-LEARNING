@@ -3,7 +3,7 @@ export const Button=({text,onClick,type="button"})=>{
         <button
         type={type}
         onClick={onClick}
-        className="bg-black">{text}
+        className="bg-gray-900 text-white font-bold w-full mt-2 rounded-lg py-2">{text}
         </button>
     );
 };
