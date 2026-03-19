@@ -1,6 +1,6 @@
 # MERN Stack App
 
-A full-stack web application built using the MERN stack. The project includes both frontend and backend with API integration, and is continuously being developed with new features.
+A full-stack application using MongoDB, Express, React, and Node.js. Currently under development with ongoing feature additions.
 
 ## Tech Stack
 - MongoDB
