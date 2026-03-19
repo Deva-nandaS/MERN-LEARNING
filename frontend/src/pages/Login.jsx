@@ -15,7 +15,7 @@ export const Login = () => {
       localStorage.setItem("token", data.data.token);
 
       alert(data.message);
-      navigate("/dashboard");
+      navigate("/dashboard",{replace:true});
     } catch (err) {
       alert(err.response?.data?.message || "Login failed");
     }
@@ -67,7 +67,7 @@ export const Login = () => {
               {" "}
               {/* password div */}
               <label className="font-bold">Password</label>
-              <Link to="/register" className="text-blue-500">
+              <Link to="" className="text-blue-500">
                 Forgot password?
               </Link>
             </div>
@@ -85,15 +85,9 @@ export const Login = () => {
           </div>
           <div className="mt-auto text-center text-gray-300 ">
               <p
-              
-              
-              
-              
               >Powered by<span className="font-bold">SuperTokens</span></p>
               </div>
                  </form>
-        
-       
       </div>
     </div>
   );
