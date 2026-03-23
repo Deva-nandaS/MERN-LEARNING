@@ -18,8 +18,6 @@ export const Sidebar=()=>{
             <p>New Thread</p>
             <p>Threads</p>
         </div>
-        
-       
         </div>
     )
 }
