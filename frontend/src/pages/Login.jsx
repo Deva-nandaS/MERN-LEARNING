@@ -15,7 +15,7 @@ export const Login = () => {
       localStorage.setItem("token", data.data.token);
 
       alert(data.message);
-      navigate("/dashboard",{replace:true});
+      navigate("/dashboard");
     } catch (err) {
       alert(err.response?.data?.message || "Login failed");
     }
@@ -81,7 +81,7 @@ export const Login = () => {
               required
             />
       
-          <Button text="SIGN IN" type="submit" />
+          <Button text="SIGN IN" type="submit" className="w-full" />
           </div>
           <div className="mt-auto text-center text-gray-300 ">
               <p

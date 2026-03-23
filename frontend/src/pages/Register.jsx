@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { registerUser } from "../api/auth";
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 import { Button } from "../Components/Button";
 
 export const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const[confirmPassword,setconfirmPassword]=useState("");
-  const navigate = useNavigate();
+  const[confirmPassword,setConfirmPassword]=useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -75,11 +74,11 @@ export const Register = () => {
               type="password"
               placeholder="Password"
               value={confirmPassword}
-              onChange={(e) => setconfirmPassword(e.target.value)}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
 
-            <Button text="REGISTER" type="submit" />
+            <Button text="REGISTER" type="submit"  className="w-full"/>
           </div>
           <div className="mt-auto text-center text-gray-300 ">
             <p>
