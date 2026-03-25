@@ -23,20 +23,20 @@ export const Register = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      <div className="w-1/2 flex justify-center items-center">
+     <div className=" flex flex-col md:flex-row h-screen">
+       <div className="hidden md:flex md:w-1/2  justify-center items-center">
         {" "}
         {/* left side */}
-        <img className="w-1/2" src="/FigLogo.png" alt="FigLogo" />
+        <img className="w-1/3" src="/FigLogo.png" alt="FigLogo" />
       </div>
 
-      <div className="w-1/2 flex justify-center items-center bg-white  ">
+      <div className="w-full md:w-1/2 flex justify-center items-center bg-white  ">
         <form
           onSubmit={handleSubmit}
-          className=" flex flex-col rounded-xl shadow-2xl p-8 w-[480px] h-[580px] mt-16 ml-44"
+          className=" flex flex-col rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-md mx-4"
         >
           <div className="max-w-sm mx-auto w-full">
-            <h4 className=" text-black text-3xl mb-4 font-semibold text-center w-full">
+            <h4 className=" text-black text-2xl sm:text-3xl mb-4 font-semibold text-center">
               Register
             </h4>
 

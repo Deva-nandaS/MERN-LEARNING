@@ -6,6 +6,7 @@ import { Sidebar } from "../Components/Sidebar";
 
 export const Dashboard = () => {
   const [user, setUser] = useState(null);
+  const[isSidebarOpen,setIsSidebarOpen]=useState(false)
   const navigate = useNavigate();
 
 useEffect(() => {
@@ -39,10 +40,12 @@ useEffect(() => {
   }
 
   return (
-    <div className="flex">
-      <Sidebar/>
-      <div className="flex-1 p-8">
-      <h1>Welcome {user.email}</h1>
+    <div className="flex h-screen overflow-hidden">
+      <Sidebar user={user}
+      isOpen={isSidebarOpen}
+      setIsOpen={setIsSidebarOpen} />
+      
+      <div className=" flex items-end p-8">
       <Button text="LOGOUT" onClick={handleLogout} className="w-auto" />
       </div>
     </div>
