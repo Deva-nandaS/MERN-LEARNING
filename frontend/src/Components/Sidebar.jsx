@@ -1,272 +1,223 @@
 import { IoChevronDown, IoChevronForward } from "react-icons/io5";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaRegEdit } from "react-icons/fa";
-import { IoPaperPlaneOutline } from "react-icons/io5";
-import { IoAlbumsOutline } from "react-icons/io5";
-import { LuGitCompareArrows } from "react-icons/lu";
-import { LuDatabaseZap } from "react-icons/lu";
+import { IoPaperPlaneOutline, IoAlbumsOutline } from "react-icons/io5";
+import { LuGitCompareArrows, LuDatabaseZap, LuBrain, LuLayoutList } from "react-icons/lu";
 import { BsHddStack } from "react-icons/bs";
-import { LuBrain } from "react-icons/lu";
-import { LuLayoutList } from "react-icons/lu";
-import { TbTriangleSquareCircle } from "react-icons/tb";
-import { LuFolderCog } from "react-icons/lu";
+import { TbTriangleSquareCircle, TbLayoutSidebarLeftCollapse } from "react-icons/tb";
+import { LuFolderCog, LuFolderClock, LuMessageSquareDashed, LuChartNetwork, LuLibraryBig } from "react-icons/lu";
 import { PiLightningDuotone } from "react-icons/pi";
-import { LuFolderClock } from "react-icons/lu";
-import { LuMessageSquareDashed } from "react-icons/lu";
-import { LuChartNetwork } from "react-icons/lu";
-import { LuLibraryBig } from "react-icons/lu";
-import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
 
-export const Sidebar = ({ user }) => {
+export const Sidebar = ({ user,onUserClick }) => {
   const [openMenu, setOpenMenu] = useState(null);
   const [subMenu, setSubMenu] = useState(null);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const navigate = useNavigate();
+
+  const itemStyle = `flex items-center p-2 rounded-md cursor-pointer hover:bg-gray-100 ${
+    isCollapsed ? "justify-center" : "gap-2"
+  }`;
 
   return (
-    <div className="h-screen flex flex-col  w-72 bg-white">
-      {/* Top section */}
-      <div className="border-b flex items-center justify-between p-6">
+    <div className={`h-screen flex flex-col bg-white transition-all duration-300 ${isCollapsed ? "w-20" : "w-72"}`}>
+      
+      {/* Top */}
+      <div className="border-b flex items-center justify-between p-4">
         <img
-          className="w-14 h-14 bg-gray-400 rounded-full"
+          className={`rounded-full bg-gray-400 ${isCollapsed ? "w-10 h-10" : "w-14 h-14"}`}
           src="/FigLogo.png"
-          alt="FigLogo"
+          alt="logo"
         />
 
-        <div className="mr-16">
-          <p className="font-semibold text-lg">Fig Labs</p>
-          <p className="text-md text-gray-500">Enterprise</p>
-        </div>
-        <div>    <TbLayoutSidebarLeftCollapse size={25} className="text-gray-600"/></div>
+        {!isCollapsed && (
+          <div>
+            <p className="font-semibold">Fig Labs</p>
+            <p className="text-sm text-gray-500">Enterprise</p>
+          </div>
+        )}
+
+        <TbLayoutSidebarLeftCollapse
+          size={22}
+          className="cursor-pointer"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        />
       </div>
-      {/* notebooks */}
-      <div className="flex-1 flex flex-col gap-3 text-lg  font-medium p-4 text-gray-600">
-        <p className=" flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md cursor-pointer">
-          <IoAlbumsOutline />
-          Notebooks
-        </p>
-        {/* integrations */}
+
+      {/* Menu */}
+      <div className="flex-1 p-3 text-gray-600 text-sm font-medium flex flex-col gap-2">
+
+        {/* Notebooks */}
+        <div onClick={() => navigate("/dashboard/notebooks")} className={itemStyle}>
+          <IoAlbumsOutline size={20} />
+          {!isCollapsed && <span>Notebooks</span>}
+        </div>
+
+        {/* Integrations */}
         <div>
           <div
-            className="justify-between flex items-center  hover:bg-gray-100 p-2 rounded-md cursor-pointer"
-            onClick={() =>
-              setOpenMenu(openMenu === "integrations" ? null : "integrations")
-            }
+            className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer"
+            onClick={() => !isCollapsed && setOpenMenu(openMenu === "integrations" ? null : "integrations")}
           >
-            <div className="flex items-center gap-2">
-              {" "}
-              <LuGitCompareArrows />
-              <p>Integrations</p>
+            <div onClick={() => navigate("/dashboard/integrations")} className={itemStyle}>
+              <LuGitCompareArrows size={20} />
+              {!isCollapsed && <span>Integrations</span>}
             </div>
 
-            {openMenu === "integrations" ? (
-              <IoChevronDown />
-            ) : (
-              <IoChevronForward />
-            )}
+            {!isCollapsed &&
+              (openMenu === "integrations" ? <IoChevronDown /> : <IoChevronForward />)}
           </div>
-          {openMenu === "integrations" && (
-            <div className="ml-6">
-              <p className=" flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md cursor-pointer">
-                <LuDatabaseZap />
-                Data Platforms
-              </p>
 
-              <p className=" flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md cursor-pointer">
+          {openMenu === "integrations" && !isCollapsed && (
+            <div className="ml-6">
+              <div onClick={() => navigate("/dashboard/integrations/platforms")} className={itemStyle}>
+                <LuDatabaseZap />
+                <span>Data Platforms</span>
+              </div>
+              <div onClick={() => navigate("/dashboard/integrations/sources")} className={itemStyle}>
                 <BsHddStack />
-                Sources
-              </p>
+                <span>Sources</span>
+              </div>
             </div>
           )}
         </div>
-        {/* knowledge */}
+
+        {/* Knowledge */}
         <div>
           <div
-            className="justify-between flex items-center hover:bg-gray-100 p-2 rounded-md cursor-pointer"
-            onClick={() =>
-              setOpenMenu(openMenu === "knowledge" ? null : "knowledge")
-            }
+            className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer"
+            onClick={() => !isCollapsed && setOpenMenu(openMenu === "knowledge" ? null : "knowledge")}
           >
-            <div className="flex items-center gap-2">
-              <LuBrain />
-              <p>Knowledge</p>
+            <div className={itemStyle}>
+              <LuBrain size={20} />
+              {!isCollapsed && <span>Knowledge</span>}
             </div>
 
-            {openMenu === "knowledge" ? (
-              <IoChevronDown />
-            ) : (
-              <IoChevronForward />
-            )}
+            {!isCollapsed &&
+              (openMenu === "knowledge" ? <IoChevronDown /> : <IoChevronForward />)}
           </div>
 
-          {openMenu === "knowledge" && (
+          {openMenu === "knowledge" && !isCollapsed && (
             <div className="ml-6">
-              {/* builder */}
-              <div
-                className=" flex items-center justify-between  hover:bg-gray-100 p-2 rounded-md cursor-pointer"
-                onClick={() =>
-                  setSubMenu(subMenu === "Builder" ? null : "Builder")
-                }
-              >
-                {" "}
-                <div className="flex items-center gap-2">
-                  {" "}
-                  <TbTriangleSquareCircle />
-                  <p>Builder</p>
-                </div>
-                {subMenu === "Builder" ? (
-                  <IoChevronDown />
-                ) : (
-                  <IoChevronForward />
-                )}
-              </div>
-              {subMenu === "Builder" && (
-                <div className="ml-6">
-                  <p className=" hover:bg-gray-100 p-2 rounded-md cursor-pointer">
-                    Option1
-                  </p>
-                  <p className="hover:bg-gray-100 p-2 rounded-md cursor-pointer">
-                    Option2
-                  </p>
-                </div>
-              )}
 
-              {/* metrics */}
+              {/* Builder */}
               <div
-                className=" flex items-center justify-between  hover:bg-gray-100 p-2 rounded-md cursor-pointer"
-                onClick={() =>
-                  setSubMenu(subMenu === "Metrics" ? null : "Metrics")
-                }
+                className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer"
+                onClick={() => {
+                  setSubMenu(subMenu === "Builder" ? null : "Builder");
+                  navigate("/dashboard/knowledge/builder");
+                }}
               >
-                {" "}
+                <div className="flex items-center gap-2">
+                  <TbTriangleSquareCircle />
+                  <span>Builder</span>
+                </div>
+                {subMenu === "Builder" ? <IoChevronDown /> : <IoChevronForward />}
+              </div>
+
+              {/* Metrics */}
+              <div
+                className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer"
+                onClick={() => {
+                  setSubMenu(subMenu === "Metrics" ? null : "Metrics");
+                  navigate("/dashboard/knowledge/metrics");
+                }}
+              >
                 <div className="flex items-center gap-2">
                   <LuChartNetwork />
-                  <p>Metrics</p>
+                  <span>Metrics</span>
                 </div>
-                {subMenu === "Metrics" ? (
-                  <IoChevronDown />
-                ) : (
-                  <IoChevronForward />
-                )}
+                {subMenu === "Metrics" ? <IoChevronDown /> : <IoChevronForward />}
               </div>
-              {subMenu === "Metrics" && (
-                <div className="ml-6">
-                  <p className=" hover:bg-gray-100 p-2 rounded-md cursor-pointer">
-                    Option1
-                  </p>
-                  <p className="hover:bg-gray-100 p-2 rounded-md cursor-pointer">
-                    Option2
-                  </p>
-                </div>
-              )}
-              <p className="flex items-center gap-2  hover:bg-gray-100 p-2 rounded-md cursor-pointer">
-                <LuFolderCog />
-                Business Context{" "}
-              </p>
 
-              <p className="flex items-center gap-2  hover:bg-gray-100 p-2 rounded-md cursor-pointer">
+              <div onClick={() => navigate("/dashboard/knowledge/businesscontext")} className={itemStyle}>
+                <LuFolderCog />
+                <span>Business Context</span>
+              </div>
+
+              <div onClick={() => navigate("/dashboard/knowledge/prompts")} className={itemStyle}>
                 <LuLibraryBig />
-                Prompts
-              </p>
+                <span>Prompts</span>
+              </div>
             </div>
           )}
         </div>
 
+        {/* Automations */}
         <div>
           <div
-            className="justify-between flex items-center hover:bg-gray-100 p-2 rounded-md cursor-pointer"
-            onClick={() =>
-              setOpenMenu(openMenu === "automations" ? null : "automations")
-            }
+            className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer"
+            onClick={() => !isCollapsed && setOpenMenu(openMenu === "automations" ? null : "automations")}
           >
-            <div className="flex items-center gap-2">
-              {" "}
-              <LuLayoutList />
-              <p>Automations</p>
+            <div className={itemStyle}>
+              <LuLayoutList size={20} />
+              {!isCollapsed && <span>Automations</span>}
             </div>
 
-            {openMenu === "automations" ? (
-              <IoChevronDown />
-            ) : (
-              <IoChevronForward />
-            )}
+            {!isCollapsed &&
+              (openMenu === "automations" ? <IoChevronDown /> : <IoChevronForward />)}
           </div>
-          {openMenu === "automations" && (
+
+          {openMenu === "automations" && !isCollapsed && (
             <div className="ml-6">
-              <p className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md cursor-pointer">
+              <div onClick={() => navigate("/dashboard/automations/schedules")} className={itemStyle}>
                 <LuFolderClock />
-                Schedules
-              </p>
-              <p className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md cursor-pointer">
+                <span>Schedules</span>
+              </div>
+              <div onClick={() => navigate("/dashboard/automations/agentdetections")} className={itemStyle}>
                 <PiLightningDuotone />
-                Agent Detections
-              </p>
+                <span>Agent Detections</span>
+              </div>
             </div>
           )}
         </div>
-        <div className="border-t flex flex-col  gap-2 pt-4 mt-2">
-          {" "}
-          <p className=" flex gap-2 items-center hover:bg-gray-100 p-2 rounded-md cursor-pointer">
-            <span>
-              <FaRegEdit />
-            </span>
-            New Thread
-          </p>
-          <div>
-            <div
-              className=" flex gap-2 items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer"
-              onClick={() =>
-                setOpenMenu(openMenu === "threads" ? null : "threads")
-              }
-            >
-              <div className="flex gap-2 items-center">
-                <span className="w-5 h-5 flex items-center justify-center ">
-                  {" "}
-                  <IoPaperPlaneOutline />
-                </span>
-                <p> Threads</p>
-              </div>
 
-              {openMenu === "threads" ? (
-                <IoChevronDown />
-              ) : (
-                <IoChevronForward />
-              )}
+        {/* Bottom */}
+        <div className="border-t mt-2 pt-2">
+
+          <div onClick={() => navigate("/dashboard/newthread")} className={itemStyle}>
+            <FaRegEdit size={20} />
+            {!isCollapsed && <span>New Thread</span>}
+          </div>
+
+          <div
+            className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer"
+            onClick={() => !isCollapsed && setOpenMenu(openMenu === "threads" ? null : "threads")}
+          >
+            <div className={itemStyle}>
+              <IoPaperPlaneOutline size={20} />
+              {!isCollapsed && <span>Threads</span>}
             </div>
 
-            {openMenu === "threads" && (
-              <div className="ml-6 hover:bg-gray-100 p-2 rounded-md cursor-pointer">
-                <p className="flex items-center gap-2">
-                  <LuMessageSquareDashed />
-                  list out all the{" "}
-                </p>
-                <p className="flex items-center gap-2">
-                  <LuMessageSquareDashed />
-                  show some
-                </p>
-                <p className="flex items-center gap-2">
-                  <LuMessageSquareDashed />
-                  explore
-                </p>
-                <p className="flex items-center gap-2">
-                  <LuMessageSquareDashed />
-                  list out
-                </p>
-              </div>
-            )}
+            {!isCollapsed &&
+              (openMenu === "threads" ? <IoChevronDown /> : <IoChevronForward />)}
           </div>
+
+          {openMenu === "threads" && !isCollapsed && (
+            <div className="ml-6">
+              <div className={itemStyle}><LuMessageSquareDashed /> List</div>
+              <div className={itemStyle}><LuMessageSquareDashed /> Explore</div>
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="border-t p-4 ">
-        <div className=" flex  items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer">
-          <div className="flex items-center gap-3">
-            <div className=" flex items-center rounded-full w-10 h-10 bg-red-700"></div>
+      {/* User */}
+      <div className="border-t p-3">
+        <div   onClick={onUserClick}className="flex items-center gap-3 hover:bg-gray-100 p-2 rounded-md cursor-pointer">
+          <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-bold">
+             {user?.email?.charAt(0).toUpperCase()}
+      </div>
+          
+
+          {!isCollapsed && (
             <div>
-              {" "}
               <p className="font-bold">Fig User</p>
-              <p className="text-gray-500 text-sm">{user?.email}</p>
+              <p className="text-xs text-gray-500">{user?.email}</p>
             </div>
-          </div>
-          <IoChevronForward />
+          )}
+
+          {!isCollapsed && <IoChevronForward />}
         </div>
       </div>
     </div>

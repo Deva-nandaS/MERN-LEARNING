@@ -78,7 +78,7 @@ export const Register = () => {
               required
             />
 
-            <Button text="REGISTER" type="submit"  className="w-full"/>
+            <Button text="REGISTER" type="submit"  className="w-full bg-gray-900 text-white font-bold  mt-2 rounded-lg py-2 "/>
           </div>
           <div className="mt-auto text-center text-gray-300 ">
             <p>

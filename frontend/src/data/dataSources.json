@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "BigQ Testing",
+    "type": "BigQuery",
+    "authType": "OAuth",
+    "status": "SYNCED",
+    "updatedBy": "John Doe",
+    "updatedAt": "2026-03-20"
+  },
+  {
+    "id": 2,
+    "name": "Snowflake",
+    "type": "Snowflake",
+    "authType": "Key Pair",
+    "status": "SYNCED",
+    "updatedBy": "Alice",
+    "updatedAt": "2026-03-18"
+  },
+  {
+      
+    "id": 3,
+    "name": "Snowflake",
+    "type": "Snowflake",
+    "authType": "Key Pair",
+    "status": "SYNCED",
+    "updatedBy": "Alice",
+    "updatedAt": "2026-03-18"
+  
+  }
+
+]

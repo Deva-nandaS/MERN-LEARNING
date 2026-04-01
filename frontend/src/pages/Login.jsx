@@ -23,7 +23,7 @@ export const Login = () => {
 
   return (
     <div className=" flex flex-col md:flex-row h-screen">
-      <div className="hidden md:flex md:w-1/2  justify-center items-center">
+      <div className=" md:flex md:w-1/2  justify-center items-center">
         {" "}
         {/* left side */}
         <img className="w-1/3" src="/FigLogo.png" alt="FigLogo" />
@@ -81,7 +81,7 @@ export const Login = () => {
               required
             />
       
-          <Button text="SIGN IN" type="submit" className="w-full" />
+          <Button text="SIGN IN" type="submit" className="w-full bg-gray-900 text-white font-bold  mt-2 rounded-lg py-2" />
           </div>
           <div className="mt-auto text-center text-gray-300 ">
               <p
