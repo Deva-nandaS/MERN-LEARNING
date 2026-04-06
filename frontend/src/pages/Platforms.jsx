@@ -81,7 +81,7 @@ export const Platforms = () => {
   {/* Footer */}
  <tfoot>
   <tr>
-    <td colSpan="7" className="p-4 border border-gray-300 text-gray-500">
+    <td colSpan="7" className="p-4 border-t border-gray-300 text-gray-500">
       <div className="flex items-center gap-2">
         <span>
           Showing 1 to {dataSources.length} of {dataSources.length} results
