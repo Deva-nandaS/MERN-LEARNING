@@ -35,14 +35,14 @@ function App() {
       <Route path="sources" element={<Sources/>}/>
      </Route>
 
-      <Route path="knowledge" element={<div>knowledge</div>}>
+      <Route path="knowledge" >
       <Route path="builder" element={<Builder/>}/>
       <Route path="metrics" element={<Metrics/>}/>
       <Route path="businesscontext" element={<BusinessContext/>}/>
       <Route path="prompts" element={<Prompts/>}/>
      </Route>
 
-       <Route path="automations" element={<div>Automations</div>}>
+       <Route path="automations">
       <Route path="schedules" element={<Schedules/>}/>
       <Route path="agentdetections" element={<AgentDetections/>}/>
      </Route>
