@@ -3,13 +3,27 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaRegEdit } from "react-icons/fa";
 import { IoPaperPlaneOutline, IoAlbumsOutline } from "react-icons/io5";
-import { LuGitCompareArrows, LuDatabaseZap, LuBrain, LuLayoutList } from "react-icons/lu";
+import {
+  LuGitCompareArrows,
+  LuDatabaseZap,
+  LuBrain,
+  LuLayoutList,
+} from "react-icons/lu";
 import { BsHddStack } from "react-icons/bs";
-import { TbTriangleSquareCircle, TbLayoutSidebarLeftCollapse } from "react-icons/tb";
-import { LuFolderCog, LuFolderClock, LuMessageSquareDashed, LuChartNetwork, LuLibraryBig } from "react-icons/lu";
+import {
+  TbTriangleSquareCircle,
+  TbLayoutSidebarLeftCollapse,
+} from "react-icons/tb";
+import {
+  LuFolderCog,
+  LuFolderClock,
+  LuMessageSquareDashed,
+  LuChartNetwork,
+  LuLibraryBig,
+} from "react-icons/lu";
 import { PiLightningDuotone } from "react-icons/pi";
 
-export const Sidebar = ({ user,onUserClick }) => {
+export const Sidebar = ({ user, onUserClick }) => {
   const [openMenu, setOpenMenu] = useState(null);
   const [subMenu, setSubMenu] = useState(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -20,12 +34,19 @@ export const Sidebar = ({ user,onUserClick }) => {
   }`;
 
   return (
-    <div className={`h-screen flex flex-col bg-white transition-all duration-300 ${isCollapsed ? "w-20" : "w-72"}`}>
-      
+    <div
+      className={`h-screen flex flex-col bg-white transition-all duration-300 ${isCollapsed ? "w-20" : "w-72"}`}
+    >
       {/* Top */}
-      <div className="border-b flex items-center justify-between p-4">
+      <div
+        className={`border-b flex items-center ${isCollapsed ? "justify-center" : "justify-between"} p-4`}
+      >
+        <div className="items-center gap-2 flex">
         <img
-          className={`rounded-full bg-gray-400 ${isCollapsed ? "w-10 h-10" : "w-14 h-14"}`}
+          onClick={() => isCollapsed && setIsCollapsed(false)}
+          className={`cursor-pointer ${
+            isCollapsed ? "w-8 h-8" : "w-12 h-12"
+          } object-contain`}
           src="/FigLogo.png"
           alt="logo"
         />
@@ -36,19 +57,24 @@ export const Sidebar = ({ user,onUserClick }) => {
             <p className="text-sm text-gray-500">Enterprise</p>
           </div>
         )}
+        </div>
 
-        <TbLayoutSidebarLeftCollapse
-          size={22}
-          className="cursor-pointer"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-        />
+        {!isCollapsed && (
+          <TbLayoutSidebarLeftCollapse
+            size={22}
+            className="cursor-pointer"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+          />
+        )}
       </div>
 
       {/* Menu */}
       <div className="flex-1 p-3 text-gray-600 text-sm font-medium flex flex-col gap-2">
-
         {/* Notebooks */}
-        <div onClick={() => navigate("/dashboard/notebooks")} className={itemStyle}>
+        <div
+          onClick={() => navigate("/dashboard/notebooks")}
+          className={itemStyle}
+        >
           <IoAlbumsOutline size={20} />
           {!isCollapsed && <span>Notebooks</span>}
         </div>
@@ -57,24 +83,40 @@ export const Sidebar = ({ user,onUserClick }) => {
         <div>
           <div
             className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer"
-            onClick={() => !isCollapsed && setOpenMenu(openMenu === "integrations" ? null : "integrations")}
+            onClick={() =>
+              !isCollapsed &&
+              setOpenMenu(openMenu === "integrations" ? null : "integrations")
+            }
           >
-            <div onClick={() => navigate("/dashboard/integrations")} className={itemStyle}>
+            <div
+              onClick={() => navigate("/dashboard/integrations")}
+              className={itemStyle}
+            >
               <LuGitCompareArrows size={20} />
               {!isCollapsed && <span>Integrations</span>}
             </div>
 
             {!isCollapsed &&
-              (openMenu === "integrations" ? <IoChevronDown /> : <IoChevronForward />)}
+              (openMenu === "integrations" ? (
+                <IoChevronDown />
+              ) : (
+                <IoChevronForward />
+              ))}
           </div>
 
           {openMenu === "integrations" && !isCollapsed && (
             <div className="ml-6">
-              <div onClick={() => navigate("/dashboard/integrations/platforms")} className={itemStyle}>
+              <div
+                onClick={() => navigate("/dashboard/integrations/platforms")}
+                className={itemStyle}
+              >
                 <LuDatabaseZap />
                 <span>Data Platforms</span>
               </div>
-              <div onClick={() => navigate("/dashboard/integrations/sources")} className={itemStyle}>
+              <div
+                onClick={() => navigate("/dashboard/integrations/sources")}
+                className={itemStyle}
+              >
                 <BsHddStack />
                 <span>Sources</span>
               </div>
@@ -86,7 +128,10 @@ export const Sidebar = ({ user,onUserClick }) => {
         <div>
           <div
             className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer"
-            onClick={() => !isCollapsed && setOpenMenu(openMenu === "knowledge" ? null : "knowledge")}
+            onClick={() =>
+              !isCollapsed &&
+              setOpenMenu(openMenu === "knowledge" ? null : "knowledge")
+            }
           >
             <div className={itemStyle}>
               <LuBrain size={20} />
@@ -94,12 +139,15 @@ export const Sidebar = ({ user,onUserClick }) => {
             </div>
 
             {!isCollapsed &&
-              (openMenu === "knowledge" ? <IoChevronDown /> : <IoChevronForward />)}
+              (openMenu === "knowledge" ? (
+                <IoChevronDown />
+              ) : (
+                <IoChevronForward />
+              ))}
           </div>
 
           {openMenu === "knowledge" && !isCollapsed && (
             <div className="ml-6">
-
               {/* Builder */}
               <div
                 className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer"
@@ -112,7 +160,11 @@ export const Sidebar = ({ user,onUserClick }) => {
                   <TbTriangleSquareCircle />
                   <span>Builder</span>
                 </div>
-                {subMenu === "Builder" ? <IoChevronDown /> : <IoChevronForward />}
+                {subMenu === "Builder" ? (
+                  <IoChevronDown />
+                ) : (
+                  <IoChevronForward />
+                )}
               </div>
 
               {/* Metrics */}
@@ -127,15 +179,25 @@ export const Sidebar = ({ user,onUserClick }) => {
                   <LuChartNetwork />
                   <span>Metrics</span>
                 </div>
-                {subMenu === "Metrics" ? <IoChevronDown /> : <IoChevronForward />}
+                {subMenu === "Metrics" ? (
+                  <IoChevronDown />
+                ) : (
+                  <IoChevronForward />
+                )}
               </div>
 
-              <div onClick={() => navigate("/dashboard/knowledge/businesscontext")} className={itemStyle}>
+              <div
+                onClick={() => navigate("/dashboard/knowledge/businesscontext")}
+                className={itemStyle}
+              >
                 <LuFolderCog />
                 <span>Business Context</span>
               </div>
 
-              <div onClick={() => navigate("/dashboard/knowledge/prompts")} className={itemStyle}>
+              <div
+                onClick={() => navigate("/dashboard/knowledge/prompts")}
+                className={itemStyle}
+              >
                 <LuLibraryBig />
                 <span>Prompts</span>
               </div>
@@ -147,7 +209,10 @@ export const Sidebar = ({ user,onUserClick }) => {
         <div>
           <div
             className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer"
-            onClick={() => !isCollapsed && setOpenMenu(openMenu === "automations" ? null : "automations")}
+            onClick={() =>
+              !isCollapsed &&
+              setOpenMenu(openMenu === "automations" ? null : "automations")
+            }
           >
             <div className={itemStyle}>
               <LuLayoutList size={20} />
@@ -155,16 +220,28 @@ export const Sidebar = ({ user,onUserClick }) => {
             </div>
 
             {!isCollapsed &&
-              (openMenu === "automations" ? <IoChevronDown /> : <IoChevronForward />)}
+              (openMenu === "automations" ? (
+                <IoChevronDown />
+              ) : (
+                <IoChevronForward />
+              ))}
           </div>
 
           {openMenu === "automations" && !isCollapsed && (
             <div className="ml-6">
-              <div onClick={() => navigate("/dashboard/automations/schedules")} className={itemStyle}>
+              <div
+                onClick={() => navigate("/dashboard/automations/schedules")}
+                className={itemStyle}
+              >
                 <LuFolderClock />
                 <span>Schedules</span>
               </div>
-              <div onClick={() => navigate("/dashboard/automations/agentdetections")} className={itemStyle}>
+              <div
+                onClick={() =>
+                  navigate("/dashboard/automations/agentdetections")
+                }
+                className={itemStyle}
+              >
                 <PiLightningDuotone />
                 <span>Agent Detections</span>
               </div>
@@ -174,15 +251,20 @@ export const Sidebar = ({ user,onUserClick }) => {
 
         {/* Bottom */}
         <div className="border-t mt-2 pt-2">
-
-          <div onClick={() => navigate("/dashboard/newthread")} className={itemStyle}>
+          <div
+            onClick={() => navigate("/dashboard/newthread")}
+            className={itemStyle}
+          >
             <FaRegEdit size={20} />
             {!isCollapsed && <span>New Thread</span>}
           </div>
 
           <div
             className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer"
-            onClick={() => !isCollapsed && setOpenMenu(openMenu === "threads" ? null : "threads")}
+            onClick={() =>
+              !isCollapsed &&
+              setOpenMenu(openMenu === "threads" ? null : "threads")
+            }
           >
             <div className={itemStyle}>
               <IoPaperPlaneOutline size={20} />
@@ -190,13 +272,21 @@ export const Sidebar = ({ user,onUserClick }) => {
             </div>
 
             {!isCollapsed &&
-              (openMenu === "threads" ? <IoChevronDown /> : <IoChevronForward />)}
+              (openMenu === "threads" ? (
+                <IoChevronDown />
+              ) : (
+                <IoChevronForward />
+              ))}
           </div>
 
           {openMenu === "threads" && !isCollapsed && (
             <div className="ml-6">
-              <div className={itemStyle}><LuMessageSquareDashed /> List</div>
-              <div className={itemStyle}><LuMessageSquareDashed /> Explore</div>
+              <div className={itemStyle}>
+                <LuMessageSquareDashed /> List
+              </div>
+              <div className={itemStyle}>
+                <LuMessageSquareDashed /> Explore
+              </div>
             </div>
           )}
         </div>
@@ -204,11 +294,13 @@ export const Sidebar = ({ user,onUserClick }) => {
 
       {/* User */}
       <div className="border-t p-3">
-        <div   onClick={onUserClick}className="flex items-center gap-3 hover:bg-gray-100 p-2 rounded-md cursor-pointer">
+        <div
+          onClick={onUserClick}
+          className="flex items-center gap-3 hover:bg-gray-100 p-2 rounded-md cursor-pointer"
+        >
           <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-bold">
-             {user?.email?.charAt(0).toUpperCase()}
-      </div>
-          
+            {user?.email?.charAt(0).toUpperCase()}
+          </div>
 
           {!isCollapsed && (
             <div>
