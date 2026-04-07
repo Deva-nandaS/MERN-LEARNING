@@ -6,10 +6,13 @@ import { FaRegEdit } from "react-icons/fa";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { IoCloseSharp } from "react-icons/io5";
 import { Breadcrumb } from "../Components/Breadcrumb";
+import { CgDanger } from "react-icons/cg";
 
 export const Platforms = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [selectedSource, setSelectedSource] = useState("postgres");
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedSource, setSelectedSource] = useState("snowflake");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const Label = ({ text, required }) => (
     <label className="text-sm font-semibold">
@@ -43,7 +46,7 @@ export const Platforms = () => {
           </div>
 
           <Button
-            onClick={() => setShowModal(true)}
+            onClick={() => setShowAddModal(true)}
             text="Add Data Source"
             className="bg-fuchsia-700 rounded px-4 py-2 text-white"
           />
@@ -92,8 +95,20 @@ export const Platforms = () => {
                     <td className="p-4 border border-gray-300">
                       <div className="flex gap-4">
                         <LuRefreshCcw className="cursor-pointer text-gray-500" />
-                        <FaRegEdit className="cursor-pointer" />
-                        <FaRegTrashAlt className="text-red-700 cursor-pointer" />
+                        <div>
+                          <FaRegEdit className="cursor-pointer" oncl />
+                        </div>
+
+                        <div>
+                          {" "}
+                          <FaRegTrashAlt
+                            className="text-red-700 cursor-pointer"
+                            onClick={() => {
+                              setSelectedItem(item);
+                              setShowDeleteModal(true);
+                            }}
+                          />
+                        </div>
                       </div>
                     </td>
                   </tr>
@@ -131,8 +146,8 @@ export const Platforms = () => {
         </div>
 
         {/* MODAL */}
-        {showModal && (
-      <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-start md:items-center justify-center pt-16 md:pt-0 overflow-y-auto">
+        {showAddModal && (
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-start md:items-center justify-center pt-16 md:pt-0 overflow-y-auto">
             <div
               className="bg-white w-full max-w-5xl mx-4 mt-10 mb-10 rounded shadow-lg max-h-[90vh] flex flex-col"
               onClick={(e) => e.stopPropagation()}
@@ -141,7 +156,7 @@ export const Platforms = () => {
               <div className="flex justify-between items-center px-6 py-3 border-b bg-gray-100">
                 <h2 className="text-xl font-bold">Add Data Source</h2>
                 <button
-                  onClick={() => setShowModal(false)}
+                  onClick={() => setShowAddModal(false)}
                   className="p-2 bg-red-700 text-white rounded hover:bg-red-800"
                 >
                   <IoCloseSharp />
@@ -154,7 +169,6 @@ export const Platforms = () => {
                   onSubmit={handleSubmit}
                   className="flex flex-col md:flex-row w-full"
                 >
-                  {/* LEFT SIDEBAR (FIXED TOP ALIGN) */}
                   <div className="w-full md:w-[160px] border-b md:border-b-0 md:border-r flex md:flex-col flex-row items-start md:items-start justify-start gap-3 p-3">
                     {[
                       { id: "snowflake", icon: "/Snowflake.png" },
@@ -177,7 +191,6 @@ export const Platforms = () => {
                     ))}
                   </div>
 
-                  {/* RIGHT CONTENT (SCROLLABLE) */}
                   <div className="flex-1 p-4 overflow-y-auto">
                     {selectedSource === "postgres" && (
                       <>
@@ -243,6 +256,75 @@ export const Platforms = () => {
                     )}
                   </div>
                 </form>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* DeleteModal */}
+        {showDeleteModal && (
+          <div className="fixed inset-0 border rounded-md flex items-center justify-center ">
+            <div
+              className="bg-white w-[500px] h-[500px] rounded shadow-lg flex flex-col "
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="flex justify-between items-center px-6 py-3 border-b bg-gray-100">
+                <h2 className="text-xl font-bold">Delete Data Source</h2>
+                <button
+                  onClick={() => setShowDeleteModal(false)}
+                  className="p-2 bg-red-700 text-white rounded hover:bg-red-800"
+                >
+                  <IoCloseSharp />
+                </button>
+              </div>
+              {/* above box */}
+              <div className="flex flex-col ml-2 mr-2 p-6">
+                <div className="flex items-center w-[400px] h-[80px] border bg-gray-100 rounded-md">
+                  <div className="flex flex-col items-center w-[50px] h-[50px] border bg-white rounded-md ml-4"></div>
+                  <div className="flex flex-col ml-3 ">
+                    <span className="font-semibold">Postgresql Testing</span>
+                    <span className="text-gray-500">postgresql</span>
+                    <span className="border rounded-sm ml-3 w-fit bg-gray-300">
+                      ID:321
+                    </span>
+                  </div>
+                </div>
+              </div>
+              {/* mid content */}
+              <div className="flex-flex-col p-3 ">
+                <p className="font-semibold">What will happen:</p>
+                <div className="text-gray-600 text-lg">
+                  <div className="flex">
+                    <CgDanger className="mt-1" />
+                    <p className="ml-3">
+                      Permanently remove this data source connection
+                    </p>
+                  </div>
+                  <div className="flex">
+                    <CgDanger className="mt-1" />
+                    <p className="ml-3">
+                      Stop all active sync jobs for this source
+                    </p>
+                  </div>
+                  <div className="flex">
+                    <CgDanger className="mt-1" />
+                    <p className="ml-3">Remove all associated sync history</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* action div */}
+              <div className="flex flex-col items-center w-[400px] h-[50px] border bg-red-200 rounded-md ml-4">
+                <div className="flex">
+                  <p className="text-red-600 p-3 mr-10 text-lg">
+                    This action cannot be undone
+                  </p>
+                </div>
+                <div className="flex mt-9 ml-12 gap-6">
+                  <Button  className="bg-gray-200 border rounded-md p-4 w-56" text="Cancel"/>
+                 <Button className="text-white bg-red-600 rounded-md p-4 w-56" text="Delete Data Source"/>
+                </div>
               </div>
             </div>
           </div>
