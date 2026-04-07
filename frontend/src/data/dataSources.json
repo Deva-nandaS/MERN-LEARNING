@@ -1,18 +1,18 @@
 [
   {
     "id": 1,
-    "name": "BigQ Testing",
-    "type": "BigQuery",
-    "authType": "OAuth",
+    "name": "BigQ Testing 003",
+    "type": "bigquery",
+    "authType": "private_key",
     "status": "SYNCED",
     "updatedBy": "John Doe",
     "updatedAt": "2026-03-20"
   },
   {
     "id": 2,
-    "name": "Snowflake",
+    "name": "Fig Sample Data Source",
     "type": "Snowflake",
-    "authType": "Key Pair",
+      "authType": "private_key",
     "status": "SYNCED",
     "updatedBy": "Alice",
     "updatedAt": "2026-03-18"
@@ -20,9 +20,9 @@
   {
       
     "id": 3,
-    "name": "Snowflake",
-    "type": "Snowflake",
-    "authType": "Key Pair",
+    "name": "cgp-retail",
+    "type": "bigquery",
+     "authType": "private_key",
     "status": "SYNCED",
     "updatedBy": "Alice",
     "updatedAt": "2026-03-18"

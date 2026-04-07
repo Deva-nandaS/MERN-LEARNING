@@ -42,21 +42,21 @@ export const Sidebar = ({ user, onUserClick }) => {
         className={`border-b flex items-center ${isCollapsed ? "justify-center" : "justify-between"} p-4`}
       >
         <div className="items-center gap-2 flex">
-        <img
-          onClick={() => isCollapsed && setIsCollapsed(false)}
-          className={`cursor-pointer ${
-            isCollapsed ? "w-8 h-8" : "w-12 h-12"
-          } object-contain`}
-          src="/FigLogo.png"
-          alt="logo"
-        />
+          <img
+            onClick={() => isCollapsed && setIsCollapsed(false)}
+            className={`cursor-pointer ${
+              isCollapsed ? "w-8 h-8" : "w-12 h-12"
+            } object-contain`}
+            src="/FigLogo.png"
+            alt="logo"
+          />
 
-        {!isCollapsed && (
-          <div>
-            <p className="font-semibold">Fig Labs</p>
-            <p className="text-sm text-gray-500">Enterprise</p>
-          </div>
-        )}
+          {!isCollapsed && (
+            <div>
+              <p className="font-semibold">Fig Labs</p>
+              <p className="text-sm text-gray-500">Enterprise</p>
+            </div>
+          )}
         </div>
 
         {!isCollapsed && (
@@ -82,7 +82,7 @@ export const Sidebar = ({ user, onUserClick }) => {
         {/* Integrations */}
         <div>
           <div
-            className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer"
+            className={`${itemStyle} justify-between`}
             onClick={() =>
               !isCollapsed &&
               setOpenMenu(openMenu === "integrations" ? null : "integrations")
@@ -90,7 +90,7 @@ export const Sidebar = ({ user, onUserClick }) => {
           >
             <div
               onClick={() => navigate("/dashboard/integrations")}
-              className={itemStyle}
+              className="flex items-center gap-2"
             >
               <LuGitCompareArrows size={20} />
               {!isCollapsed && <span>Integrations</span>}
@@ -127,13 +127,13 @@ export const Sidebar = ({ user, onUserClick }) => {
         {/* Knowledge */}
         <div>
           <div
-            className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer"
+            className={`${itemStyle} justify-between`}
             onClick={() =>
               !isCollapsed &&
               setOpenMenu(openMenu === "knowledge" ? null : "knowledge")
             }
           >
-            <div className={itemStyle}>
+            <div className="flex items-center gap-2">
               <LuBrain size={20} />
               {!isCollapsed && <span>Knowledge</span>}
             </div>
@@ -207,14 +207,13 @@ export const Sidebar = ({ user, onUserClick }) => {
 
         {/* Automations */}
         <div>
-          <div
-            className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer"
+         <div className={`${itemStyle} justify-between`}
             onClick={() =>
               !isCollapsed &&
               setOpenMenu(openMenu === "automations" ? null : "automations")
             }
           >
-            <div className={itemStyle}>
+            <div className="flex items-center gap-2">
               <LuLayoutList size={20} />
               {!isCollapsed && <span>Automations</span>}
             </div>
@@ -259,14 +258,14 @@ export const Sidebar = ({ user, onUserClick }) => {
             {!isCollapsed && <span>New Thread</span>}
           </div>
 
-          <div
-            className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md cursor-pointer"
+          <div className={`${itemStyle} justify-between`}
+            
             onClick={() =>
               !isCollapsed &&
               setOpenMenu(openMenu === "threads" ? null : "threads")
             }
           >
-            <div className={itemStyle}>
+         <div className="flex items-center gap-2" >
               <IoPaperPlaneOutline size={20} />
               {!isCollapsed && <span>Threads</span>}
             </div>
@@ -280,7 +279,7 @@ export const Sidebar = ({ user, onUserClick }) => {
           </div>
 
           {openMenu === "threads" && !isCollapsed && (
-            <div className="ml-6">
+            <div className="ml-8">
               <div className={itemStyle}>
                 <LuMessageSquareDashed /> List
               </div>
@@ -291,25 +290,31 @@ export const Sidebar = ({ user, onUserClick }) => {
           )}
         </div>
       </div>
-
       {/* User */}
-      <div className="border-t p-3">
+      <div className="border-t p-2 md:p-3">
         <div
           onClick={onUserClick}
-          className="flex items-center gap-3 hover:bg-gray-100 p-2 rounded-md cursor-pointer"
+          className={`flex items-center rounded-md cursor-pointer hover:bg-gray-100 transition-all
+      ${isCollapsed ? "justify-center p-2" : "gap-3 p-2"}
+    `}
         >
-          <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-bold">
+          {/* Avatar */}
+          <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-bold text-sm md:text-base">
             {user?.email?.charAt(0).toUpperCase()}
           </div>
 
+          {/* User Info */}
           {!isCollapsed && (
-            <div>
-              <p className="font-bold">Fig User</p>
-              <p className="text-xs text-gray-500">{user?.email}</p>
+            <div className="flex flex-col min-w-0">
+              <p className="font-semibold text-sm truncate">Fig User</p>
+              <p className="text-xs text-gray-500 truncate">{user?.email}</p>
             </div>
           )}
 
-          {!isCollapsed && <IoChevronForward />}
+          {/* Arrow */}
+          {!isCollapsed && (
+            <IoChevronForward className="ml-auto text-gray-400" />
+          )}
         </div>
       </div>
     </div>
