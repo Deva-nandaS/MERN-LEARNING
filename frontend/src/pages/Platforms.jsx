@@ -7,6 +7,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { IoCloseSharp } from "react-icons/io5";
 import { Breadcrumb } from "../Components/Breadcrumb";
 import { CgDanger } from "react-icons/cg";
+import { LuTriangleAlert } from "react-icons/lu";
 
 export const Platforms = () => {
   const [showAddModal, setShowAddModal] = useState(false);
@@ -178,9 +179,12 @@ export const Platforms = () => {
                       <div
                         key={item.id}
                         onClick={() => setSelectedSource(item.id)}
-                        className={`w-24 md:w-32 h-16 md:h-20 flex items-center justify-center cursor-pointer border-2 border-transparent hover:border-gray-300 ${
-                          selectedSource === item.id ? "border-fuchsia-700" : ""
-                        }`}
+                        className={`w-24 md:w-32 h-16 md:h-20 flex items-center justify-center cursor-pointer border-2 rounded-lg hover:border-gray-300 
+                          ${
+                            selectedSource === item.id
+                              ? "border-fuchsia-700 bg-fuchsia-50"
+                              : "border-gray-200 hover:border-gray-400"
+                          }`}
                       >
                         <img
                           src={item.icon}
@@ -251,7 +255,7 @@ export const Platforms = () => {
 
                     {selectedSource !== "postgres" && (
                       <div className="flex items-center justify-center h-full text-gray-400">
-                        Form coming soon...
+                        
                       </div>
                     )}
                   </div>
@@ -270,7 +274,7 @@ export const Platforms = () => {
             >
               {/* Header */}
               <div className="flex justify-between items-center px-6 py-3 border-b bg-gray-100">
-                <h2 className="text-xl font-bold">Delete Data Source</h2>
+                <h2 className="text-2xl font-bold">Delete Data Source</h2>
                 <button
                   onClick={() => setShowDeleteModal(false)}
                   className="p-2 bg-red-700 text-white rounded hover:bg-red-800"
@@ -279,14 +283,14 @@ export const Platforms = () => {
                 </button>
               </div>
               {/* above box */}
-              <div className="flex flex-col ml-2 mr-2 p-6">
-                <div className="flex items-center w-[400px] h-[80px] border bg-gray-100 rounded-md">
-                  <div className="flex flex-col items-center w-[50px] h-[50px] border bg-white rounded-md ml-4"></div>
+              <div className="flex flex-col ml-3 p-6">
+                <div className="flex items-center w-full h-[80px] border bg-gray-100 rounded-md">
+                  <div className="flex w-fullflex-col items-center w-[50px] h-[50px] border bg-white rounded-md ml-4"></div>
                   <div className="flex flex-col ml-3 ">
-                    <span className="font-semibold">Postgresql Testing</span>
-                    <span className="text-gray-500">postgresql</span>
+                    <span className="font-semibold">{selectedItem?.name}Testing</span>
+                    <span className="text-gray-500">{selectedItem?.type}</span>
                     <span className="border rounded-sm ml-3 w-fit bg-gray-300">
-                      ID:321
+                      ID:{selectedItem?.id}
                     </span>
                   </div>
                 </div>
@@ -295,35 +299,43 @@ export const Platforms = () => {
               <div className="flex-flex-col p-3 ">
                 <p className="font-semibold">What will happen:</p>
                 <div className="text-gray-600 text-lg">
-                  <div className="flex">
+                  <div className="flex items-center">
                     <CgDanger className="mt-1" />
                     <p className="ml-3">
                       Permanently remove this data source connection
                     </p>
                   </div>
-                  <div className="flex">
-                    <CgDanger className="mt-1" />
+                  <div className="flex items-center">
+                    <CgDanger />
                     <p className="ml-3">
                       Stop all active sync jobs for this source
                     </p>
                   </div>
-                  <div className="flex">
-                    <CgDanger className="mt-1" />
+                  <div className="flex items-center">
+                    <CgDanger />
                     <p className="ml-3">Remove all associated sync history</p>
                   </div>
                 </div>
               </div>
 
               {/* action div */}
-              <div className="flex flex-col items-center w-[400px] h-[50px] border bg-red-200 rounded-md ml-4">
-                <div className="flex">
-                  <p className="text-red-600 p-3 mr-10 text-lg">
+              <div className="flex flex-col items-center w-[400px] h-[50px] border bg-red-100 border-red-300 rounded-md ml-4 mt-4">
+                <div className="flex items-center text-red-600">
+                  <LuTriangleAlert />
+                  <p className=" p-3 mr-10 text-lg">
                     This action cannot be undone
                   </p>
                 </div>
-                <div className="flex mt-9 ml-12 gap-6">
-                  <Button  className="bg-gray-200 border rounded-md p-4 w-56" text="Cancel"/>
-                 <Button className="text-white bg-red-600 rounded-md p-4 w-56" text="Delete Data Source"/>
+                <div className="flex mt-9 ml-12 gap-6 p-3 f">
+                  <Button
+                    className="bg-gray-200 border rounded-md font-semibold w-56 py-2 "
+                    text="Cancel"
+                    onClick={() => setShowDeleteModal(false)}
+                  />
+                  <Button
+                    className="text-white bg-red-600 rounded-md font-bold  w-56"
+                    text="Delete Data Source"
+                  />
                 </div>
               </div>
             </div>
