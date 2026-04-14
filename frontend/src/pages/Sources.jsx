@@ -8,6 +8,7 @@ export const Sources = () => {
   const [selectedSource, setSelectedSource] = useState("false");
   const [selectedItem, setSelectedItem] = useState(null);
   const[activeModal,setActiveModal]=useState(null);
+
   return (
     <div>
       {/* Breadcrumb */}
@@ -99,9 +100,9 @@ export const Sources = () => {
               <img src="/shopify.png" alt="shopify" className=" w-8 h-8"></img>{" "}
               <p>Shopify</p>
             </div>
-         {activeModal=== "shopify"&&
-         <ShopifyModal onClose={()=>setActiveModal(null)} />}
           </div>
+
+          
           <div className="flex-1 bg-white border rounded-lg p-6  ">
             {" "}
             <div className="flex items-center gap-2 grayscale opacity-50 ">
@@ -137,6 +138,8 @@ export const Sources = () => {
             </div>
           </div>
         </div>
+             {activeModal=== "shopify"&&
+         <ShopifyModal onClose={()=>setActiveModal(null)} />}
       </div>
     </div>
   );
