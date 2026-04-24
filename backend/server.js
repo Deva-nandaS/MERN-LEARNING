@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const authRoutes= require("./routes/authRoutes")
 const dashboardRoutes=require("./routes/dashboardRoutes")
+const shopifyRoutes = require("./routes/shopifyRoutes");
 
 const app = express();
 
@@ -11,9 +12,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-
 app.use("/api/auth",authRoutes);
 app.use("/api/dashboard",dashboardRoutes);
+app.use("/api/shopify", shopifyRoutes);
 
 
 mongoose.connect(process.env.MONGO_URI)
