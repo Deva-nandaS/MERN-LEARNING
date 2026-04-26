@@ -1,11 +1,13 @@
 import { IoCloseSharp } from "react-icons/io5";
 import { Button } from "../Button";
 import { useState } from "react";
+import { FaCheck } from "react-icons/fa6";
 
 import { Connect } from "../Shopify/Connect";
 import { Configure } from "../Shopify/Configure";
 import { Sync } from "../Shopify/Sync";
 import { Review } from "../Shopify/Review";
+
 
 export const ShopifyModal = ({ onClose }) => {
   const [method, setMethod] = useState("token");
@@ -200,16 +202,26 @@ const [startDate, setStartDate] = useState("");
               <Sync syncType={syncType} setSyncType={setSyncType} />
             )}
 
-            {step === 4 && (
-              <Review method={method} token={token} syncType={syncType} />
-            )}
+    {step === 4 && (
+  <Review
+    sourceName={sourceName}
+    method={method}
+    token={token}
+    storeName={storeUrl}   // 👈 FIX HERE ALSO
+    syncType={syncType}
+    startDate={startDate}
+  />
+)}
 
             {step === 5 && (
               <div className="flex flex-col items-center justify-center w-full h-full">
-                <div className="text-green-600 text-5xl mb-4">✔</div>
+                <div className="text-green-600 text-5xl mb-4">
+                  <FaCheck size={50}/>
+                </div>
                 <h2 className="text-xl font-semibold">
                   Source Created Successfully!
                 </h2>
+                {sourceName}
               </div>
             )}
           </div>
