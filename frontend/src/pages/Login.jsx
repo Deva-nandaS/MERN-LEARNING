@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../Components/Button";
 
 export const Login = () => {
-  const [email, setEmail] = useState("kuk@gmail.com");
+  const [email, setEmail] = useState("iop@gmail.com");
   const [password, setPassword] = useState("123");
   const navigate = useNavigate();
 

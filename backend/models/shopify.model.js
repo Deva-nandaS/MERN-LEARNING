@@ -2,11 +2,15 @@ const mongoose = require("mongoose");
 
 const shopifySchema = new mongoose.Schema(
   {
+    sourceName: String,     
     method: String,
     token: String,
-    storeName: String,
-    storeUrl: String,
+    storeUrl: String,       
     syncType: String,
+    startDate: {
+  type: Date,
+  default: () => new Date("2024-01-01")
+}   
   },
   { timestamps: true }
 );
