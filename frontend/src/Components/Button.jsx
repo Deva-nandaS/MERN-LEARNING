@@ -7,3 +7,6 @@ export const Button=({text,onClick,type="button",className=""})=>{
         </button>
     );
 };
+
+
+    

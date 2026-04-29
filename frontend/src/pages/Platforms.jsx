@@ -282,7 +282,7 @@ export const Platforms = () => {
                   <IoCloseSharp />
                 </button>
               </div>
-              {/* above box */}
+              {/* top box */}
               <div className="flex flex-col ml-3 p-6">
                 <div className="flex items-center w-full h-[80px] border bg-gray-100 rounded-md">
                   <div className="flex w-fullflex-col items-center w-[50px] h-[50px] border bg-white rounded-md ml-4"></div>

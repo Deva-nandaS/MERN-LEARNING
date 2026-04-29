@@ -2,6 +2,7 @@ import { FiKey } from "react-icons/fi";
 import { TiTick } from "react-icons/ti";
 import { LuShield } from "react-icons/lu";
 
+
 export const Connect = ({
   method,
   setMethod,

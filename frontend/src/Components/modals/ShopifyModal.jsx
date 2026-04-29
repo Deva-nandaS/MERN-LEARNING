@@ -7,6 +7,7 @@ import { Connect } from "../Shopify/Connect";
 import { Configure } from "../Shopify/Configure";
 import { Sync } from "../Shopify/Sync";
 import { Review } from "../Shopify/Review";
+import { useEffect } from "react";
 
 const steps = [
   { label: "Connect", sub: "Authentication" },
@@ -25,6 +26,15 @@ export const ShopifyModal = ({ onClose }) => {
   const [sourceName, setSourceName] = useState("");
   const [storeUrl, setStoreUrl] = useState("");
   const [startDate, setStartDate] = useState("");
+  const [cron, setCron] = useState("");
+  const [scheduleType, setScheduleType] = useState("");
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   const handleCreate = async () => {
     const payload = {
@@ -33,7 +43,7 @@ export const ShopifyModal = ({ onClose }) => {
       token,
       syncType,
       storeUrl,
-      startDate: startDate || "2024-01-01",
+      startDate,
     };
     try {
       const res = await fetch("http://localhost:5000/api/shopify", {
@@ -51,12 +61,12 @@ export const ShopifyModal = ({ onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 overflow-hidden"
       onClick={onClose}
     >
       <div
         className="bg-white rounded-lg flex flex-col
-          w-full h-[95vh]
+         w-[95%] max-w-[900px] h-[95vh]
           md:w-[900px] md:h-[500px]"
         onClick={(e) => e.stopPropagation()}
       >
@@ -66,13 +76,12 @@ export const ShopifyModal = ({ onClose }) => {
             <img src="/shopify.png" alt="shopify" className="w-10 h-10" />
             <h2 className="text-xl font-bold">Set up Shopify</h2>
           </div>
-          <IoCloseSharp
-            className="text-xl cursor-pointer hover:text-red-500"
-            onClick={onClose}
-          />
+          <div className="p-2 text-xl cursor-pointer bg-red-700 text-white rounded hover:bg-red-800">
+            <IoCloseSharp onClick={onClose} />
+          </div>
         </div>
 
-        {/* MOBILE STEP INDICATOR */}
+        {/* STEP INDICATOR */}
         <div className="flex md:hidden items-center justify-center gap-2 bg-gray-100 border-b px-4 py-2 shrink-0">
           {steps.map((s, i) => (
             <div key={i} className="flex items-center gap-1">
@@ -153,14 +162,21 @@ export const ShopifyModal = ({ onClose }) => {
               />
             )}
             {step === 3 && (
-              <Sync syncType={syncType} setSyncType={setSyncType} />
+              <Sync
+                syncType={syncType}
+                setSyncType={setSyncType}
+                scheduleType={scheduleType}
+                setScheduleType={setScheduleType}
+                setCron={setCron}
+                cron={cron}
+              />
             )}
             {step === 4 && (
               <Review
                 sourceName={sourceName}
                 method={method}
                 token={token}
-                storeName={storeUrl}
+                storeUrl={storeUrl}
                 syncType={syncType}
                 startDate={startDate}
               />
