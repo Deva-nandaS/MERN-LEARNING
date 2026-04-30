@@ -1,5 +1,5 @@
 import { IoCloseSharp } from "react-icons/io5";
-import { Button } from "../Button";
+import { Button } from "../ui/Button";
 import { useState } from "react";
 import { FaCheck } from "react-icons/fa6";
 
@@ -76,7 +76,7 @@ export const ShopifyModal = ({ onClose }) => {
             <img src="/shopify.png" alt="shopify" className="w-10 h-10" />
             <h2 className="text-xl font-bold">Set up Shopify</h2>
           </div>
-          <div className="p-2 text-xl cursor-pointer bg-red-700 text-white rounded hover:bg-red-800">
+          <div className=" text-xl cursor-pointer bg-red-700 text-white rounded hover:bg-red-800">
             <IoCloseSharp onClick={onClose} />
           </div>
         </div>

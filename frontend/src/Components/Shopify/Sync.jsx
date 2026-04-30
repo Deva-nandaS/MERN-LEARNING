@@ -43,7 +43,7 @@ const SelectField = ({ label, value, onChange, options }) => (
     <select
       value={value}
       onChange={(e) => onChange(Number(e.target.value))}
-      className="border border-gray-300 rounded-md px-2 py-1.5 text-sm text-center w-20 bg-white outline-none focus:ring-2 focus:ring-fuchsia-300"
+      className="border border-gray-300 rounded-md px-2 py-1.5 text-sm text-center w-20 bg-white outline-none focus:ring-2 focus:ring-blue-300"
     >
       {options.map((v) => <option key={v} value={v}>{pad(v)}</option>)}
     </select>
@@ -69,10 +69,10 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
     custom: "",
   });
 
-  const update = (patch, currentFreq) => {
+  const update = (patch) => {
     const next = { ...s, ...patch };
     setS(next);
-    setCron(buildCron(currentFreq ?? freq, next));
+    setCron(buildCron(freq, next));
   };
 
   const handleFreq = (f) => {
@@ -99,7 +99,7 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
         <div
           onClick={() => { setSyncType("manual"); setFreq(null); setCron(""); }}
           className={`flex-1 border rounded-lg cursor-pointer p-3 ${
-            syncType === "manual" ? "bg-fuchsia-50 border-fuchsia-900" : "bg-gray-100 border-transparent"
+            syncType === "manual" ? "bg-blue-50 border-blue-600" : "bg-gray-100 border-transparent"
           }`}
         >
           <p className="font-bold text-sm">Manual Sync</p>
@@ -108,7 +108,7 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
         <div
           onClick={() => setSyncType("scheduled")}
           className={`flex-1 border rounded-lg cursor-pointer p-3 ${
-            syncType === "scheduled" ? "bg-fuchsia-50 border-fuchsia-900" : "bg-gray-100 border-transparent"
+            syncType === "scheduled" ? "bg-blue-50 border-blue-600" : "bg-gray-100 border-transparent"
           }`}
         >
           <p className="font-bold text-sm">Scheduled Sync</p>
@@ -116,20 +116,20 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
         </div>
       </div>
 
-      {/* Scheduler box */}
+      {/* Scheduler box — shown below when scheduled is selected */}
       {syncType === "scheduled" && (
         <div className="border border-gray-200 rounded-xl bg-white p-5 flex flex-col gap-5">
 
-          {/* Frequency pills across the top */}
+          {/* Frequency selection buttons */}
           <div className="flex flex-wrap gap-2">
             {FREQUENCY_OPTIONS.map(({ label, value }) => (
               <button
                 key={value}
                 onClick={() => handleFreq(value)}
-                className={`px-4 py-1.5 rounded-full border text-sm transition ${
+                className={`px-5 py-2 rounded-md border text-sm font-medium transition ${
                   freq === value
-                    ? "bg-fuchsia-900 text-white border-fuchsia-900"
-                    : "bg-white text-gray-600 border-gray-300 hover:border-gray-500"
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-white text-gray-600 border-gray-300 hover:border-blue-400 hover:text-blue-500"
                 }`}
               >
                 {label}
@@ -137,9 +137,10 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
             ))}
           </div>
 
-          {/* Controls */}
+          {/* Controls per frequency */}
           {freq && (
             <div className="flex flex-col gap-4">
+
               {freq === "hourly" && (
                 <div>
                   <p className="text-xs text-gray-500 mb-2">At minute past the hour</p>
@@ -148,10 +149,10 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
                       <button
                         key={v}
                         onClick={() => update({ hourlyMin: v })}
-                        className={`px-3 py-1 rounded-full border text-sm transition ${
+                        className={`px-3 py-1 rounded-md border text-sm transition ${
                           s.hourlyMin === v
-                            ? "bg-fuchsia-900 text-white border-fuchsia-900"
-                            : "bg-white text-gray-600 border-gray-300 hover:border-gray-500"
+                            ? "bg-blue-600 text-white border-blue-600"
+                            : "bg-white text-gray-600 border-gray-300 hover:border-blue-400"
                         }`}
                       >
                         :{pad(v)}
@@ -181,10 +182,10 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
                         <button
                           key={i}
                           onClick={() => toggleDay(i)}
-                          className={`w-9 h-9 rounded-full border text-xs font-medium transition ${
+                          className={`w-9 h-9 rounded-md border text-xs font-medium transition ${
                             s.weekDays.includes(i)
-                              ? "bg-fuchsia-900 text-white border-fuchsia-900"
-                              : "bg-white text-gray-600 border-gray-300 hover:border-gray-500"
+                              ? "bg-blue-600 text-white border-blue-600"
+                              : "bg-white text-gray-600 border-gray-300 hover:border-blue-400"
                           }`}
                         >
                           {d}
@@ -219,7 +220,9 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
               )}
 
               {freq === "yearly" && (
-                <p className="text-sm text-gray-500">Runs once a year on <span className="font-medium text-gray-700">January 1st at midnight</span>.</p>
+                <p className="text-sm text-gray-500">
+                  Runs once a year on <span className="font-medium text-gray-700">January 1st at midnight</span>.
+                </p>
               )}
 
               {freq === "custom" && (
@@ -230,7 +233,7 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
                     value={s.custom}
                     onChange={(e) => update({ custom: e.target.value })}
                     placeholder="e.g. 0 9 * * 1-5"
-                    className="w-full border border-gray-300 rounded-md p-2 text-sm font-mono outline-none focus:ring-2 focus:ring-fuchsia-300"
+                    className="w-full border border-gray-300 rounded-md p-2 text-sm font-mono outline-none focus:ring-2 focus:ring-blue-300"
                   />
                   <p className="text-xs text-gray-400 mt-1">Format: minute hour day month weekday</p>
                 </div>

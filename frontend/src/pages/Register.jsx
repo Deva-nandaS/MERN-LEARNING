@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { registerUser } from "../api/auth";
 import { Link} from "react-router-dom";
-import { Button } from "../Components/Button";
+import { Button } from "../Components/ui/Button";
+import { Input } from "../Components/ui/Input";
 
 export const Register = () => {
   const [email, setEmail] = useState("");
@@ -49,7 +50,7 @@ export const Register = () => {
             <div className="border-b my-10"></div>
 
             <label className="font-bold mb-2 block ">Email</label>
-            <input
+            <Input
               className="border-2 rounded-lg w-full p-2 mb-4  "
               type="email"
               placeholder="Email"
@@ -59,7 +60,7 @@ export const Register = () => {
             />
 
             <label className="font-bold">Password</label>
-            <input
+            <Input
               className="border-2 rounded-lg w-full p-2 mb-4 mt-2"
               type="password"
               placeholder="Password"

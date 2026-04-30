@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getDashboard } from "../api/dashboard";
-import { Button } from "../Components/Button";
+import { Button } from "../Components/ui/Button";
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "../Components/Sidebar";
 import { Outlet } from "react-router-dom";

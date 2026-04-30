@@ -17,10 +17,10 @@ import { AgentDetections } from "./pages/AgentDetections";
 import { NewThread } from "./pages/NewThread";
 import { AdminSettings } from "./pages/AdminSettings";
 import { ChangePassword } from "./pages/ChangePassword";
-
+import Modal from "react-modal";
 
 function App() {
-
+Modal.setAppElement("#root");
   return (
       <Router>
         <Routes>
