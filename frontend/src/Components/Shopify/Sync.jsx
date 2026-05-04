@@ -16,25 +16,25 @@ const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
 function buildCron(freq, s) {
   switch (freq) {
-    case "hourly":  return `${s.hourlyMin} * * * *`;
-    case "daily":   return `${s.dailyM} ${s.dailyH} * * *`;
-    case "weekly":  return `${s.weekM} ${s.weekH} * * ${[...s.weekDays].sort().join(",")}`;
+    case "hourly": return `${s.hourlyMin} * * * *`;
+    case "daily": return `${s.dailyM} ${s.dailyH} * * *`;
+    case "weekly": return `${s.weekM} ${s.weekH} * * ${[...s.weekDays].sort().join(",")}`;
     case "monthly": return `${s.monthM} ${s.monthH} ${s.monthDay} * *`;
-    case "yearly":  return `0 0 1 1 *`;
-    case "custom":  return s.custom || "* * * * *";
-    default:        return "* * * * *";
+    case "yearly": return `0 0 1 1 *`;
+    case "custom": return s.custom || "* * * * *";
+    default: return "* * * * *";
   }
 }
 
 function buildHuman(freq, s) {
   switch (freq) {
-    case "hourly":  return `Every hour at :${pad(s.hourlyMin)}`;
-    case "daily":   return `Every day at ${pad(s.dailyH)}:${pad(s.dailyM)}`;
-    case "weekly":  return `Every ${[...s.weekDays].sort().map(d => DAYS[d]).join(", ")} at ${pad(s.weekH)}:${pad(s.weekM)}`;
+    case "hourly": return `Every hour at :${pad(s.hourlyMin)}`;
+    case "daily": return `Every day at ${pad(s.dailyH)}:${pad(s.dailyM)}`;
+    case "weekly": return `Every ${[...s.weekDays].sort().map(d => DAYS[d]).join(", ")} at ${pad(s.weekH)}:${pad(s.weekM)}`;
     case "monthly": return `Monthly on day ${s.monthDay} at ${pad(s.monthH)}:${pad(s.monthM)}`;
-    case "yearly":  return `Every year on Jan 1 at midnight`;
-    case "custom":  return `Custom schedule`;
-    default:        return "";
+    case "yearly": return `Every year on Jan 1 at midnight`;
+    case "custom": return `Custom schedule`;
+    default: return "";
   }
 }
 
@@ -43,7 +43,7 @@ const SelectField = ({ label, value, onChange, options }) => (
     <select
       value={value}
       onChange={(e) => onChange(Number(e.target.value))}
-      className="border border-gray-300 rounded-md px-2 py-1.5 text-sm text-center w-20 bg-white outline-none focus:ring-2 focus:ring-blue-300"
+      className="border border-gray-300 rounded-md px-2 py-1.5 text-sm text-center w-20 bg-white outline-none focus:ring-2 focus:ring-fuchsia-300"
     >
       {options.map((v) => <option key={v} value={v}>{pad(v)}</option>)}
     </select>
@@ -59,8 +59,9 @@ const TimePicker = ({ h, m, onH, onM }) => (
   </div>
 );
 
-export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
+export const Sync = ({ formData, setFormData }) => {
   const [freq, setFreq] = useState(null);
+
   const [s, setS] = useState({
     hourlyMin: 0,
     dailyH: 0, dailyM: 0,
@@ -72,20 +73,32 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
   const update = (patch) => {
     const next = { ...s, ...patch };
     setS(next);
-    setCron(buildCron(freq, next));
+
+    setFormData({
+      ...formData,
+      cron: buildCron(freq, next),
+    });
   };
 
   const handleFreq = (f) => {
     setFreq(f);
-    setCron(buildCron(f, s));
+
+    setFormData({
+      ...formData,
+      syncType: "scheduled",
+      cron: buildCron(f, s),
+    });
   };
 
   const toggleDay = (i) => {
     const days = s.weekDays.includes(i)
       ? s.weekDays.length > 1 ? s.weekDays.filter((d) => d !== i) : s.weekDays
       : [...s.weekDays, i];
+
     update({ weekDays: days });
   };
+
+  const syncType = formData.syncType;
 
   return (
     <div className="flex flex-col w-full gap-4">
@@ -94,33 +107,50 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
         Choose whether this source syncs only when triggered manually or on an automatic schedule.
       </p>
 
-      {/* Sync type cards */}
       <div className="flex gap-3">
         <div
-          onClick={() => { setSyncType("manual"); setFreq(null); setCron(""); }}
+          onClick={() =>
+            setFormData({
+              ...formData,
+              syncType: "manual",
+              cron: "",
+            })
+          }
           className={`flex-1 border rounded-lg cursor-pointer p-3 ${
-            syncType === "manual" ? "bg-blue-50 border-blue-600" : "bg-gray-100 border-transparent"
+            syncType === "manual"
+              ? "bg-fuchsia-50 border-fuchsia-600"
+              : "bg-gray-100 border-transparent"
           }`}
         >
           <p className="font-bold text-sm">Manual Sync</p>
-          <p className="text-gray-600 text-sm mt-1">Run syncs only when you trigger them from the sources page.</p>
+          <p className="text-gray-600 text-sm mt-1">
+            Run syncs only when you trigger them from the sources page.
+          </p>
         </div>
+
         <div
-          onClick={() => setSyncType("scheduled")}
+          onClick={() =>
+            setFormData({
+              ...formData,
+              syncType: "scheduled",
+            })
+          }
           className={`flex-1 border rounded-lg cursor-pointer p-3 ${
-            syncType === "scheduled" ? "bg-blue-50 border-blue-600" : "bg-gray-100 border-transparent"
+            syncType === "scheduled"
+              ? "bg-fuchsia-50 border-fuchsia-600"
+              : "bg-gray-100 border-transparent"
           }`}
         >
           <p className="font-bold text-sm">Scheduled Sync</p>
-          <p className="text-gray-600 text-sm mt-1">Set a recurring cron schedule for automatic syncing.</p>
+          <p className="text-gray-600 text-sm mt-1">
+            Set a recurring cron schedule for automatic syncing.
+          </p>
         </div>
       </div>
 
-      {/* Scheduler box — shown below when scheduled is selected */}
       {syncType === "scheduled" && (
         <div className="border border-gray-200 rounded-xl bg-white p-5 flex flex-col gap-5">
 
-          {/* Frequency selection buttons */}
           <div className="flex flex-wrap gap-2">
             {FREQUENCY_OPTIONS.map(({ label, value }) => (
               <button
@@ -128,8 +158,8 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
                 onClick={() => handleFreq(value)}
                 className={`px-5 py-2 rounded-md border text-sm font-medium transition ${
                   freq === value
-                    ? "bg-blue-600 text-white border-blue-600"
-                    : "bg-white text-gray-600 border-gray-300 hover:border-blue-400 hover:text-blue-500"
+                    ? "bg-fuchsia-950 text-white border-fuchsia-600"
+                    : "bg-white text-gray-600 border-gray-300 hover:border-fuchsia-400 hover:text-fuchsia-500"
                 }`}
               >
                 {label}
@@ -137,7 +167,6 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
             ))}
           </div>
 
-          {/* Controls per frequency */}
           {freq && (
             <div className="flex flex-col gap-4">
 
@@ -151,8 +180,8 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
                         onClick={() => update({ hourlyMin: v })}
                         className={`px-3 py-1 rounded-md border text-sm transition ${
                           s.hourlyMin === v
-                            ? "bg-blue-600 text-white border-blue-600"
-                            : "bg-white text-gray-600 border-gray-300 hover:border-blue-400"
+                            ? "bg-fuchsia-950 text-white border-fuchsia-600"
+                            : "bg-white text-gray-600 border-gray-300 hover:border-fuchsia-400"
                         }`}
                       >
                         :{pad(v)}
@@ -166,7 +195,8 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
                 <div>
                   <p className="text-xs text-gray-500 mb-2">Every day at</p>
                   <TimePicker
-                    h={s.dailyH} m={s.dailyM}
+                    h={s.dailyH}
+                    m={s.dailyM}
                     onH={(v) => update({ dailyH: v })}
                     onM={(v) => update({ dailyM: v })}
                   />
@@ -184,8 +214,8 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
                           onClick={() => toggleDay(i)}
                           className={`w-9 h-9 rounded-md border text-xs font-medium transition ${
                             s.weekDays.includes(i)
-                              ? "bg-blue-600 text-white border-blue-600"
-                              : "bg-white text-gray-600 border-gray-300 hover:border-blue-400"
+                              ? "bg-fuchsia-600 text-white border-fuchsia-600"
+                              : "bg-white text-gray-600 border-gray-300 hover:border-fuchsia-400"
                           }`}
                         >
                           {d}
@@ -193,10 +223,12 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
                       ))}
                     </div>
                   </div>
+
                   <div>
                     <p className="text-xs text-gray-500 mb-2">At time</p>
                     <TimePicker
-                      h={s.weekH} m={s.weekM}
+                      h={s.weekH}
+                      m={s.weekM}
                       onH={(v) => update({ weekH: v })}
                       onM={(v) => update({ weekM: v })}
                     />
@@ -208,10 +240,16 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
                 <div>
                   <p className="text-xs text-gray-500 mb-2">On day of month at</p>
                   <div className="flex items-end gap-2">
-                    <SelectField label="Day" value={s.monthDay} onChange={(v) => update({ monthDay: v })} options={range(1, 31)} />
+                    <SelectField
+                      label="Day"
+                      value={s.monthDay}
+                      onChange={(v) => update({ monthDay: v })}
+                      options={range(1, 31)}
+                    />
                     <div className="pb-5 text-gray-300 text-sm">@</div>
                     <TimePicker
-                      h={s.monthH} m={s.monthM}
+                      h={s.monthH}
+                      m={s.monthM}
                       onH={(v) => update({ monthH: v })}
                       onM={(v) => update({ monthM: v })}
                     />
@@ -221,37 +259,41 @@ export const Sync = ({ syncType, setSyncType, cron, setCron }) => {
 
               {freq === "yearly" && (
                 <p className="text-sm text-gray-500">
-                  Runs once a year on <span className="font-medium text-gray-700">January 1st at midnight</span>.
+                  Runs once a year on{" "}
+                  <span className="font-medium text-gray-700">
+                    January 1st at midnight
+                  </span>.
                 </p>
               )}
 
               {freq === "custom" && (
                 <div>
-                  <p className="text-xs text-gray-500 mb-2">Enter a cron expression</p>
+                  <p className="text-xs text-gray-500 mb-2">
+                    Enter a cron expression
+                  </p>
                   <input
                     type="text"
                     value={s.custom}
                     onChange={(e) => update({ custom: e.target.value })}
                     placeholder="e.g. 0 9 * * 1-5"
-                    className="w-full border border-gray-300 rounded-md p-2 text-sm font-mono outline-none focus:ring-2 focus:ring-blue-300"
+                    className="w-full border border-gray-300 rounded-md p-2 text-sm font-mono outline-none focus:ring-2 focus:ring-fuchsia-300"
                   />
-                  <p className="text-xs text-gray-400 mt-1">Format: minute hour day month weekday</p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Format: minute hour day month weekday
+                  </p>
                 </div>
               )}
 
-              {/* Cron output */}
               <div className="border-t border-gray-100 pt-4 flex flex-col gap-1">
                 <p className="text-xs text-gray-400">Cron expression</p>
                 <p className="font-mono text-sm bg-gray-50 border border-gray-200 rounded-md px-3 py-2">
                   {buildCron(freq, s)}
                 </p>
-                <p className="text-xs text-gray-500">{buildHuman(freq, s)}</p>
+                <p className="text-xs text-gray-500">
+                  {buildHuman(freq, s)}
+                </p>
               </div>
             </div>
-          )}
-
-          {!freq && (
-            <p className="text-sm text-gray-400">Select a frequency above to configure the schedule.</p>
           )}
         </div>
       )}

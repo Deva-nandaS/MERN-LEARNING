@@ -38,6 +38,9 @@ export const Platforms = () => {
     user: "",
     password: "",
     port: "",
+    account: "",
+warehouse: "",
+role: "",
   });
   const handleChange = (e) => {
     setFormData({
@@ -73,7 +76,7 @@ export const Platforms = () => {
       setSources((prev) => [...prev, newItem]);
     }
 
-    // reset
+  
     setShowAddModal(false);
     setIsEditMode(false);
   };
@@ -335,9 +338,129 @@ export const Platforms = () => {
               </>
             )}
 
-            {selectedSource !== "postgres" && (
-              <div className="flex items-center justify-center h-full text-gray-400" />
-            )}
+            {selectedSource === "snowflake" && (
+  <>
+    <h2 className="text-xl font-bold">Snowflake Connection</h2>
+
+    <p className="text-sm text-gray-600 uppercase font-bold mt-3">
+      Connection Details
+    </p>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+      {[
+        { label: "Connection Name", name: "name" },
+        { label: "Account Identifier", name: "account" },
+        { label: "Warehouse", name: "warehouse" },
+        { label: "Database", name: "database" },
+        { label: "Username", name: "user" },
+        { label: "Password", name: "password" },
+        { label: "Role", name: "role" },
+      ].map((field, i) => (
+        <div key={i}>
+          <Label text={field.label} required={field.name !== "role"} />
+          <Input
+            name={field.name}
+            value={formData[field.name] ?? ""}
+            onChange={handleChange}
+            type={field.name === "password" ? "password" : "text"}
+            placeholder={field.label}
+            className="border border-gray-300 p-2 rounded w-full"
+          />
+        </div>
+      ))}
+
+      <div className="col-span-2 flex gap-2 items-end">
+        <div className="flex-1">
+          <label>Schema</label>
+          <select className="border border-gray-300 p-2 rounded w-full">
+            <option>select schema</option>
+          </select>
+        </div>
+        <button
+          type="button"
+          className="flex items-center gap-2 border px-4 py-2 rounded"
+        >
+          <LuRefreshCcw />
+          Fetch
+        </button>
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      className="w-full bg-fuchsia-900 text-white py-2 rounded mt-4"
+    >
+      Submit
+    </button>
+  </>
+)}
+
+{selectedSource === "bigquery" && (
+  <>
+    <h2 className="text-xl font-bold">BigQuery Connection</h2>
+
+    <p className="text-sm text-gray-600 uppercase font-bold mt-3">
+      Connection Details
+    </p>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+      {[
+        { label: "Connection Name", name: "name" },
+        { label: "Project ID", name: "projectId" },
+        { label: "Dataset", name: "dataset" },
+        { label: "Location", name: "location" },
+      ].map((field, i) => (
+        <div key={i}>
+          <Label text={field.label} required={field.name !== "location"} />
+          <Input
+            name={field.name}
+            value={formData[field.name] ?? ""}
+            onChange={handleChange}
+            type="text"
+            placeholder={field.label}
+            className="border border-gray-300 p-2 rounded w-full"
+          />
+        </div>
+      ))}
+
+      {/* Service Account JSON — full width */}
+      <div className="col-span-2">
+        <Label text="Service Account JSON" required />
+        <textarea
+          name="serviceAccountJson"
+          value={formData.serviceAccountJson ?? ""}
+          onChange={handleChange}
+          rows={6}
+          placeholder='{"type": "service_account", "project_id": "..."}'
+          className="border border-gray-300 p-2 rounded w-full font-mono text-xs"
+        />
+      </div>
+
+      <div className="col-span-2 flex gap-2 items-end">
+        <div className="flex-1">
+          <label>Dataset</label>
+          <select className="border border-gray-300 p-2 rounded w-full">
+            <option>select dataset</option>
+          </select>
+        </div>
+        <button
+          type="button"
+          className="flex items-center gap-2 border px-4 py-2 rounded"
+        >
+          <LuRefreshCcw />
+          Fetch
+        </button>
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      className="w-full bg-fuchsia-900 text-white py-2 rounded mt-4"
+    >
+      Submit
+    </button>
+  </>
+)}
           </div>
         </form>
       </div>

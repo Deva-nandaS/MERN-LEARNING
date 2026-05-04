@@ -16,7 +16,19 @@ export const Sources = () => {
   const [loading, setLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editData, setEditData] = useState(null);
 
+const [formData, setFormData] = useState({
+  _id:"",
+  sourceName: "",
+  method: "",
+  token: "",   
+  storeUrl: "",
+  startDate: "",
+  syncType: "manual",
+  cron: "",
+});
   useEffect(() => {
     const fetchSources = async () => {
       try {
@@ -34,6 +46,21 @@ export const Sources = () => {
       fetchSources();
     }
   }, [activeTab]);
+
+  useEffect(() => {
+    if (isEditMode && editData) {
+      setFormData({
+        _id: editData._id,
+        sourceName: editData.sourceName || "",
+        method: editData.method || "",
+         token: editData.token || "",
+        storeUrl: editData.storeUrl || "",
+        startDate: editData.startDate || "",
+        syncType: editData.syncType || "manual",
+        cron: editData.cron || "",
+      });
+    }
+  }, [isEditMode, editData]);
 
   const connectors = [
     { name: "Shopify", img: "/shopify.png", modal: "shopify" },
@@ -64,16 +91,33 @@ export const Sources = () => {
         <div className="flex border rounded-lg h-12 bg-white w-fit">
           <Button
             text="Add New Source"
-            onClick={() => setActiveTab("add")}
+            onClick={() => {
+              setActiveTab("add");
+              setIsEditMode(false);
+              setEditData(null);
+              setFormData({
+                sourceName: "",
+                method: "",
+                 token: "", 
+                storeUrl: "",
+                startDate: "",
+                syncType: "manual",
+                cron: "",
+              });
+            }}
             className={`px-6 py-2 font-bold text-sm uppercase rounded-l-lg ${
-              activeTab === "add" ? "bg-black text-white" : "bg-white text-black"
+              activeTab === "add"
+                ? "bg-black text-white"
+                : "bg-white text-black"
             }`}
           />
           <Button
             text="Sources"
             onClick={() => setActiveTab("sources")}
             className={`px-6 py-2 font-bold text-sm uppercase rounded-r-lg ${
-              activeTab === "sources" ? "bg-black text-white" : "bg-white text-black"
+              activeTab === "sources"
+                ? "bg-black text-white"
+                : "bg-white text-black"
             }`}
           />
         </div>
@@ -104,8 +148,14 @@ export const Sources = () => {
                     item.modal ? "cursor-pointer" : ""
                   }`}
                 >
-                  <div className={`flex items-center gap-2 ${item.disabled ? "grayscale opacity-50" : ""}`}>
-                    <img src={item.img} alt={item.name} className="w-6 h-6 sm:w-8 sm:h-8" />
+                  <div
+                    className={`flex items-center gap-2 ${item.disabled ? "grayscale opacity-50" : ""}`}
+                  >
+                    <img
+                      src={item.img}
+                      alt={item.name}
+                      className="w-6 h-6 sm:w-8 sm:h-8"
+                    />
                     <p className="text-xs sm:text-base">{item.name}</p>
                   </div>
                 </div>
@@ -130,11 +180,15 @@ export const Sources = () => {
                 <tbody>
                   {loading ? (
                     <tr>
-                      <td colSpan="5" className="text-center p-6">Loading...</td>
+                      <td colSpan="5" className="text-center p-6">
+                        Loading...
+                      </td>
                     </tr>
                   ) : sources.length === 0 ? (
                     <tr>
-                      <td colSpan="5" className="text-center p-6 text-gray-500">No sources found</td>
+                      <td colSpan="5" className="text-center p-6 text-gray-500">
+                        No sources found
+                      </td>
                     </tr>
                   ) : (
                     sources.map((item) => (
@@ -142,18 +196,36 @@ export const Sources = () => {
                         <td className="p-4 border">{item.sourceName}</td>
                         <td className="p-4 border">{item.method}</td>
                         <td className="p-4 border">
-                          {item.syncType === "scheduled" ? item.cron || "Scheduled" : "Manual"}
+                          {item.syncType === "scheduled"
+                            ? item.cron || "Scheduled"
+                            : "Manual"}
                         </td>
                         <td className="p-4 border">
-                          {item.startDate ? new Date(item.startDate).toLocaleDateString() : "-"}
+                          {item.startDate
+                            ? new Date(item.startDate).toLocaleDateString()
+                            : "-"}
                         </td>
                         <td className="p-4 border">
                           <div className="flex gap-4 items-center">
-                            <LuRefreshCcw className="cursor-pointer text-gray-500" onClick={() => console.log("refresh", item._id)} />
-                            <FaRegEdit className="cursor-pointer" onClick={() => console.log("edit", item)} />
+                            <LuRefreshCcw
+                              className="cursor-pointer text-gray-500"
+                              onClick={() => console.log("refresh", item._id)}
+                            />
+                            <FaRegEdit
+                              className="cursor-pointer"
+                              onClick={() => {
+                                setIsEditMode(true);
+                                setEditData(item);
+                                setActiveModal("shopify");
+                               
+                              }}
+                            />
                             <FaRegTrashAlt
                               className="text-red-600 cursor-pointer"
-                              onClick={() => { setSelectedItem(item); setShowDeleteModal(true); }}
+                              onClick={() => {
+                                setSelectedItem(item);
+                                setShowDeleteModal(true);
+                              }}
                             />
                           </div>
                         </td>
@@ -167,7 +239,17 @@ export const Sources = () => {
         )}
 
         {activeModal === "shopify" && (
-          <ShopifyModal onClose={() => setActiveModal(null)} />
+          <ShopifyModal
+            onClose={() => {
+              setActiveModal(null);
+              setIsEditMode(false);
+              setEditData(null);
+               setActiveTab("sources");
+            }}
+            isEditMode={isEditMode}
+            formData={formData}
+            setFormData={setFormData}
+          />
         )}
 
         <DeleteModal
@@ -178,7 +260,9 @@ export const Sources = () => {
             if (!selectedItem?._id) return;
             try {
               await deleteSource(selectedItem._id);
-              setSources((prev) => prev.filter((item) => item._id !== selectedItem._id));
+              setSources((prev) =>
+                prev.filter((item) => item._id !== selectedItem._id),
+              );
               setShowDeleteModal(false);
               setSelectedItem(null);
             } catch (err) {

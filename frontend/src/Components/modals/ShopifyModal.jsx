@@ -1,13 +1,11 @@
 import { IoCloseSharp } from "react-icons/io5";
 import { Button } from "../ui/Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaCheck } from "react-icons/fa6";
-
 import { Connect } from "../Shopify/Connect";
 import { Configure } from "../Shopify/Configure";
 import { Sync } from "../Shopify/Sync";
 import { Review } from "../Shopify/Review";
-import { useEffect } from "react";
 
 const steps = [
   { label: "Connect", sub: "Authentication" },
@@ -16,18 +14,15 @@ const steps = [
   { label: "Review Configuration", sub: "" },
 ];
 
-export const ShopifyModal = ({ onClose }) => {
-  const [method, setMethod] = useState("token");
+export const ShopifyModal = ({
+  onClose,
+  isEditMode,
+  formData,
+  setFormData,
+}) => {
   const [step, setStep] = useState(1);
-  const [token, setToken] = useState("");
   const [error, setError] = useState("");
   const [touched, setTouched] = useState(false);
-  const [syncType, setSyncType] = useState("");
-  const [sourceName, setSourceName] = useState("");
-  const [storeUrl, setStoreUrl] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [cron, setCron] = useState("");
-  const [scheduleType, setScheduleType] = useState("");
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -36,23 +31,24 @@ export const ShopifyModal = ({ onClose }) => {
     };
   }, []);
 
-  const handleCreate = async () => {
-    const payload = {
-      sourceName,
-      method,
-      token,
-      syncType,
-      storeUrl,
-      startDate,
-    };
+  const handleSubmit = async () => {
+     console.log("SUBMIT CLICKED"); 
     try {
-      const res = await fetch("http://localhost:5000/api/shopify", {
-        method: "POST",
+      const url = isEditMode
+        ? `http://localhost:5000/api/shopify/${formData._id}`
+        : "http://localhost:5000/api/shopify";
+
+      const method = isEditMode ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(formData),
       });
+
       const data = await res.json();
       console.log(data);
+
       setStep(5);
     } catch (err) {
       console.error(err);
@@ -104,12 +100,14 @@ export const ShopifyModal = ({ onClose }) => {
 
         {/* BODY */}
         <div className="flex flex-1 overflow-hidden">
-          {/* LEFT STEPPER - hidden on mobile */}
+          {/* LEFT STEPPER */}
           <div className="hidden md:flex w-1/4 border-r p-4 bg-gray-100 flex-col">
             {steps.map((s, i) => (
               <div
                 key={i}
-                className={`flex gap-3 ${i !== 0 ? "mt-4" : ""} ${step < i + 1 ? "opacity-50" : ""}`}
+                className={`flex gap-3 ${i !== 0 ? "mt-4" : ""} ${
+                  step < i + 1 ? "opacity-50" : ""
+                }`}
               >
                 <div className="flex flex-col items-center">
                   <div
@@ -127,7 +125,9 @@ export const ShopifyModal = ({ onClose }) => {
                 </div>
                 <div>
                   <p
-                    className={`font-semibold ${step === i + 1 ? "text-black" : "text-gray-400"}`}
+                    className={`font-semibold ${
+                      step === i + 1 ? "text-black" : "text-gray-400"
+                    }`}
                   >
                     {s.label}
                   </p>
@@ -141,55 +141,35 @@ export const ShopifyModal = ({ onClose }) => {
           <div className="flex-1 p-4 overflow-y-auto min-w-0">
             {step === 1 && (
               <Connect
-                method={method}
-                setMethod={setMethod}
-                token={token}
-                setToken={setToken}
+                formData={formData}
+                setFormData={setFormData}
                 error={error}
                 setError={setError}
                 touched={touched}
                 setTouched={setTouched}
               />
             )}
+
             {step === 2 && (
-              <Configure
-                sourceName={sourceName}
-                setSourceName={setSourceName}
-                storeUrl={storeUrl}
-                setStoreUrl={setStoreUrl}
-                startDate={startDate}
-                setStartDate={setStartDate}
-              />
+              <Configure formData={formData} setFormData={setFormData} />
             )}
+
             {step === 3 && (
-              <Sync
-                syncType={syncType}
-                setSyncType={setSyncType}
-                scheduleType={scheduleType}
-                setScheduleType={setScheduleType}
-                setCron={setCron}
-                cron={cron}
-              />
+              <Sync formData={formData} setFormData={setFormData} />
             )}
-            {step === 4 && (
-              <Review
-                sourceName={sourceName}
-                method={method}
-                token={token}
-                storeUrl={storeUrl}
-                syncType={syncType}
-                startDate={startDate}
-              />
-            )}
+            {step === 4 && <Review formData={formData} />}
+
             {step === 5 && (
               <div className="flex flex-col items-center justify-center w-full h-full">
                 <div className="text-green-600 mb-4">
                   <FaCheck size={50} />
                 </div>
                 <h2 className="text-xl font-semibold">
-                  Source Created Successfully!
+                  {isEditMode
+                    ? "Source Updated Successfully!"
+                    : "Source Created Successfully!"}
                 </h2>
-                <p className="text-gray-500 mt-1">{sourceName}</p>
+                <p className="text-gray-500 mt-1">{formData.sourceName}</p>
               </div>
             )}
           </div>
@@ -210,7 +190,16 @@ export const ShopifyModal = ({ onClose }) => {
                   text="Next"
                   onClick={() => {
                     setTouched(true);
-                    if (method === "token" && token.trim() === "") {
+                    if (!formData.method) {
+                      setError("Select authentication method");
+                      return;
+                    }
+
+                    if (
+                      !isEditMode &&
+                      formData.method === "token" &&
+                      !formData.token?.trim()
+                    ) {
                       setError("Access Token required");
                       return;
                     }
@@ -219,6 +208,7 @@ export const ShopifyModal = ({ onClose }) => {
                 />
               </>
             )}
+
             {step === 2 && (
               <>
                 <Button
@@ -233,6 +223,7 @@ export const ShopifyModal = ({ onClose }) => {
                 />
               </>
             )}
+
             {step === 3 && (
               <>
                 <Button
@@ -247,6 +238,7 @@ export const ShopifyModal = ({ onClose }) => {
                 />
               </>
             )}
+
             {step === 4 && (
               <>
                 <Button
@@ -256,11 +248,12 @@ export const ShopifyModal = ({ onClose }) => {
                 />
                 <Button
                   className="bg-black text-white border rounded-md font-semibold w-32 py-2"
-                  text="Create Source"
-                  onClick={handleCreate}
+                  text={isEditMode ? "Update Source" : "Create Source"}
+                  onClick={handleSubmit}
                 />
               </>
             )}
+
             {step === 5 && (
               <Button
                 className="bg-black text-white border rounded-md font-semibold w-32 py-2"
