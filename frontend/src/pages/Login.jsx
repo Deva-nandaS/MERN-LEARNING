@@ -14,6 +14,7 @@ export const Login = () => {
     try {
       const data = await loginUser(email, password);
       localStorage.setItem("token", data.data.token);
+       localStorage.setItem("user", JSON.stringify(data.data.user));
 
       alert(data.message);
       navigate("/dashboard");

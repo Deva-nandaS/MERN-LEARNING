@@ -16,25 +16,57 @@ const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
 function buildCron(freq, s) {
   switch (freq) {
-    case "hourly": return `${s.hourlyMin} * * * *`;
-    case "daily": return `${s.dailyM} ${s.dailyH} * * *`;
-    case "weekly": return `${s.weekM} ${s.weekH} * * ${[...s.weekDays].sort().join(",")}`;
-    case "monthly": return `${s.monthM} ${s.monthH} ${s.monthDay} * *`;
-    case "yearly": return `0 0 1 1 *`;
-    case "custom": return s.custom || "* * * * *";
-    default: return "* * * * *";
+    case "hourly":
+      return `${s.hourlyMin} * * * *`;
+    case "daily":
+      return `${s.dailyM} ${s.dailyH} * * *`;
+    case "weekly":
+      return `${s.weekM} ${s.weekH} * * ${[...s.weekDays].sort().join(",")}`;
+    case "monthly":
+      return `${s.monthM} ${s.monthH} ${s.monthDay} * *`;
+    case "yearly":
+      return `0 0 1 1 *`;
+    case "custom": {
+      const val = s.intervalValue ?? 1;
+      switch (s.intervalUnit) {
+        case "minutes":
+          return `*/${val} * * * *`;
+        case "hours":
+          return `0 */${val} * * *`;
+        case "days":
+          return `0 0 */${val} * *`;
+        case "weeks":
+          return `0 0 * * */${val}`;
+        case "months":
+          return `0 0 1 */${val} *`;
+        default:
+          return `*/${val} * * * *`;
+      }
+    }
+    default:
+      return "* * * * *";
   }
 }
 
 function buildHuman(freq, s) {
   switch (freq) {
-    case "hourly": return `Every hour at :${pad(s.hourlyMin)}`;
-    case "daily": return `Every day at ${pad(s.dailyH)}:${pad(s.dailyM)}`;
-    case "weekly": return `Every ${[...s.weekDays].sort().map(d => DAYS[d]).join(", ")} at ${pad(s.weekH)}:${pad(s.weekM)}`;
-    case "monthly": return `Monthly on day ${s.monthDay} at ${pad(s.monthH)}:${pad(s.monthM)}`;
-    case "yearly": return `Every year on Jan 1 at midnight`;
-    case "custom": return `Custom schedule`;
-    default: return "";
+    case "hourly":
+      return `Every hour at :${pad(s.hourlyMin)}`;
+    case "daily":
+      return `Every day at ${pad(s.dailyH)}:${pad(s.dailyM)}`;
+    case "weekly":
+      return `Every ${[...s.weekDays]
+        .sort()
+        .map((d) => DAYS[d])
+        .join(", ")} at ${pad(s.weekH)}:${pad(s.weekM)}`;
+    case "monthly":
+      return `Monthly on day ${s.monthDay} at ${pad(s.monthH)}:${pad(s.monthM)}`;
+    case "yearly":
+      return `Every year on Jan 1 at midnight`;
+    case "custom":
+      return `Every ${s.intervalValue ?? 1} ${s.intervalUnit ?? "minutes"}`;
+    default:
+      return "";
   }
 }
 
@@ -45,7 +77,11 @@ const SelectField = ({ label, value, onChange, options }) => (
       onChange={(e) => onChange(Number(e.target.value))}
       className="border border-gray-300 rounded-md px-2 py-1.5 text-sm text-center w-20 bg-white outline-none focus:ring-2 focus:ring-fuchsia-300"
     >
-      {options.map((v) => <option key={v} value={v}>{pad(v)}</option>)}
+      {options.map((v) => (
+        <option key={v} value={v}>
+          {pad(v)}
+        </option>
+      ))}
     </select>
     <span className="text-xs text-gray-400">{label}</span>
   </div>
@@ -55,7 +91,12 @@ const TimePicker = ({ h, m, onH, onM }) => (
   <div className="flex items-end gap-2">
     <SelectField label="Hour" value={h} onChange={onH} options={range(0, 23)} />
     <span className="text-gray-300 text-lg pb-5">:</span>
-    <SelectField label="Minute" value={m} onChange={onM} options={range(0, 59)} />
+    <SelectField
+      label="Minute"
+      value={m}
+      onChange={onM}
+      options={range(0, 59)}
+    />
   </div>
 );
 
@@ -64,22 +105,28 @@ export const Sync = ({ formData, setFormData }) => {
 
   const [s, setS] = useState({
     hourlyMin: 0,
-    dailyH: 0, dailyM: 0,
-    weekDays: [1], weekH: 0, weekM: 0,
-    monthDay: 1, monthH: 0, monthM: 0,
-    custom: "",
+    dailyH: 0,
+    dailyM: 0,
+    weekDays: [1],
+    weekH: 0,
+    weekM: 0,
+    monthDay: 1,
+    monthH: 0,
+    monthM: 0,
+    intervalValue: 1,
+    intervalUnit: "minutes",
   });
 
-  const update = (patch) => {
-    const next = { ...s, ...patch };
-    setS(next);
-
-    setFormData({
-      ...formData,
+ const update = (patch) => {
+  setS((prev) => {
+    const next = { ...prev, ...patch };  // ← always uses latest s
+    setFormData((prevForm) => ({
+      ...prevForm,
       cron: buildCron(freq, next),
-    });
-  };
-
+    }));
+    return next;
+  });
+};
   const handleFreq = (f) => {
     setFreq(f);
 
@@ -92,7 +139,9 @@ export const Sync = ({ formData, setFormData }) => {
 
   const toggleDay = (i) => {
     const days = s.weekDays.includes(i)
-      ? s.weekDays.length > 1 ? s.weekDays.filter((d) => d !== i) : s.weekDays
+      ? s.weekDays.length > 1
+        ? s.weekDays.filter((d) => d !== i)
+        : s.weekDays
       : [...s.weekDays, i];
 
     update({ weekDays: days });
@@ -104,7 +153,8 @@ export const Sync = ({ formData, setFormData }) => {
     <div className="flex flex-col w-full gap-4">
       <p className="font-bold text-2xl">Sync Schedule</p>
       <p className="text-base text-gray-500">
-        Choose whether this source syncs only when triggered manually or on an automatic schedule.
+        Choose whether this source syncs only when triggered manually or on an
+        automatic schedule.
       </p>
 
       <div className="flex gap-3">
@@ -150,7 +200,6 @@ export const Sync = ({ formData, setFormData }) => {
 
       {syncType === "scheduled" && (
         <div className="border border-gray-200 rounded-xl bg-white p-5 flex flex-col gap-5">
-
           <div className="flex flex-wrap gap-2">
             {FREQUENCY_OPTIONS.map(({ label, value }) => (
               <button
@@ -169,10 +218,11 @@ export const Sync = ({ formData, setFormData }) => {
 
           {freq && (
             <div className="flex flex-col gap-4">
-
               {freq === "hourly" && (
                 <div>
-                  <p className="text-xs text-gray-500 mb-2">At minute past the hour</p>
+                  <p className="text-xs text-gray-500 mb-2">
+                    At minute past the hour
+                  </p>
                   <div className="flex flex-wrap gap-2">
                     {[0, 5, 10, 15, 20, 30, 45].map((v) => (
                       <button
@@ -238,7 +288,9 @@ export const Sync = ({ formData, setFormData }) => {
 
               {freq === "monthly" && (
                 <div>
-                  <p className="text-xs text-gray-500 mb-2">On day of month at</p>
+                  <p className="text-xs text-gray-500 mb-2">
+                    On day of month at
+                  </p>
                   <div className="flex items-end gap-2">
                     <SelectField
                       label="Day"
@@ -262,25 +314,41 @@ export const Sync = ({ formData, setFormData }) => {
                   Runs once a year on{" "}
                   <span className="font-medium text-gray-700">
                     January 1st at midnight
-                  </span>.
+                  </span>
+                  .
                 </p>
               )}
 
               {freq === "custom" && (
                 <div>
-                  <p className="text-xs text-gray-500 mb-2">
-                    Enter a cron expression
-                  </p>
-                  <input
-                    type="text"
-                    value={s.custom}
-                    onChange={(e) => update({ custom: e.target.value })}
-                    placeholder="e.g. 0 9 * * 1-5"
-                    className="w-full border border-gray-300 rounded-md p-2 text-sm font-mono outline-none focus:ring-2 focus:ring-fuchsia-300"
-                  />
-                  <p className="text-xs text-gray-400 mt-1">
-                    Format: minute hour day month weekday
-                  </p>
+                  <p className="text-xs text-gray-500 mb-2">Run every</p>
+                  <div className="flex gap-2 items-center">
+                    {/* Number input */}
+                    <input
+                      type="number"
+                      min="1"
+                      value={s.intervalValue}
+                      onChange={(e) =>
+                        update({ intervalValue: Number(e.target.value) }, freq)
+                      }
+                      className="border border-gray-300 rounded-md px-2 py-1.5 text-sm w-20 outline-none focus:ring-2 focus:ring-fuchsia-300"
+                    />
+
+                    {/* Unit dropdown */}
+                    <select
+                      value={s.intervalUnit}
+                      onChange={(e) =>
+                        update({ intervalUnit: e.target.value }, freq)
+                      }
+                      className="border border-gray-300 rounded-md px-2 py-1.5 text-sm bg-white outline-none focus:ring-2 focus:ring-fuchsia-300"
+                    >
+                      <option value="minutes">Minutes</option>
+                      <option value="hours">Hours</option>
+                      <option value="days">Days</option>
+                      <option value="weeks">Weeks</option>
+                      <option value="months">Months</option>
+                    </select>
+                  </div>
                 </div>
               )}
 
@@ -289,9 +357,7 @@ export const Sync = ({ formData, setFormData }) => {
                 <p className="font-mono text-sm bg-gray-50 border border-gray-200 rounded-md px-3 py-2">
                   {buildCron(freq, s)}
                 </p>
-                <p className="text-xs text-gray-500">
-                  {buildHuman(freq, s)}
-                </p>
+                <p className="text-xs text-gray-500">{buildHuman(freq, s)}</p>
               </div>
             </div>
           )}
