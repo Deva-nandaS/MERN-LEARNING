@@ -10,6 +10,8 @@ export const FormField = ({
   required,
   type = "text",
   textarea = false,
+  rows=4,
+  placeholder="",
 }) => (
   <div>
     <label className="text-sm font-semibold">
@@ -22,6 +24,8 @@ export const FormField = ({
         name={name}
         value={value ?? ""}
         onChange={onChange}
+        rows={rows}
+        placeholder={placeholder}
         className="border border-gray-300 p-2 rounded w-full font-mono text-xs"
       />
     ) : (
@@ -30,6 +34,7 @@ export const FormField = ({
         value={value ?? ""}
         onChange={onChange}
         type={type}
+        placeholder={placeholder}
         className="border border-gray-300 p-2 rounded w-full"
       />
     )}

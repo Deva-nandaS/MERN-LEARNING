@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { LuRefreshCcw } from "react-icons/lu";
 import { Input } from "../../ui/Input";
-
+import { FormError } from "../../ui/FormError";
 
 const Label = ({ text, required }) => (
   <label className="text-sm font-semibold">
@@ -44,10 +44,7 @@ export const PostgresForm = ({
               className="border border-gray-300 p-2 rounded w-full"
             />
 
-
-            {errors[field.name] && (
-              <p className="text-red-500 text-xs mt-1">{errors[field.name]}</p>
-            )}
+              <FormError message={errors?.[field.name]} />
           </div>
         ))}
 
@@ -81,48 +78,40 @@ export const PostgresForm = ({
         </div>
 
         {/* PASSWORD */}
-    {authType === "password" && (
-  <div className="col-span-2">
-    <Label text="Password" required />
-    <Input
-      name="password"
-      value={formData.password ?? ""}
-      onChange={onChange}
-      type="password"
-      placeholder="Password"
-      className="border border-gray-300 p-2 rounded w-full"
-    />
+        {authType === "password" && (
+          <div className="col-span-2">
+            <Label text="Password" required />
+            <Input
+              name="password"
+              value={formData.password ?? ""}
+              onChange={onChange}
+              type="password"
+              placeholder="Password"
+              className="border border-gray-300 p-2 rounded w-full"
+            />
 
-    {errors.password && (
-      <p className="text-red-500 text-xs mt-1">
-        {errors.password}
-      </p>
-    )}
-  </div>
-)}
+             <FormError message={errors?.password} />
+          </div>
+        )}
 
         {/* SSL */}
-       {authType === "ssl" && (
-  <>
-    <div className="col-span-2">
-      <Label text="SSL Certificate" required />
-      <textarea
-        name="sslCert"
-        value={formData.sslCert ?? ""}
-        onChange={onChange}
-        rows={4}
-        placeholder="-----BEGIN CERTIFICATE-----"
-        className="border border-gray-300 p-2 rounded w-full font-mono text-xs"
-      />
+        {authType === "ssl" && (
+          <>
+            <div className="col-span-2">
+              <Label text="SSL Certificate" required />
+              <textarea
+                name="sslCert"
+                value={formData.sslCert ?? ""}
+                onChange={onChange}
+                rows={4}
+                placeholder="-----BEGIN CERTIFICATE-----"
+                className="border border-gray-300 p-2 rounded w-full font-mono text-xs"
+              />
 
-      {errors.sslCert && (
-        <p className="text-red-500 text-xs mt-1">
-          {errors.sslCert}
-        </p>
-      )}
-    </div>
-  </>
-)}
+                <FormError message={errors?.sslCert} />
+            </div>
+          </>
+        )}
 
         {/* SCHEMA */}
         <div className="col-span-2 flex gap-2 items-end">
@@ -130,6 +119,7 @@ export const PostgresForm = ({
             <label>Schema</label>
             <select className="border border-gray-300 p-2 rounded w-full">
               <option>select schema</option>
+          
             </select>
           </div>
           <button
@@ -141,12 +131,7 @@ export const PostgresForm = ({
         </div>
       </div>
 
-      <button
-        type="submit"
-        className="w-full bg-fuchsia-900 text-white py-2 rounded mt-4"
-      >
-        Submit
-      </button>
+     
     </>
   );
 };

@@ -7,6 +7,7 @@ import { LuRefreshCcw } from "react-icons/lu";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { DeleteModal } from "../Components/modals/DeleteModal";
 import { getSources, deleteSource } from "../api/shopify";
+import { FileUploadModal } from "../Components/modals/FileUploadModal";
 
 export const Sources = () => {
   const [activeModal, setActiveModal] = useState(null);
@@ -19,16 +20,16 @@ export const Sources = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editData, setEditData] = useState(null);
 
-const [formData, setFormData] = useState({
-  _id:"",
-  sourceName: "",
-  method: "",
-  token: "",   
-  storeUrl: "",
-  startDate: "",
-  syncType: "manual",
-  cron: "",
-});
+  const [formData, setFormData] = useState({
+    _id: "",
+    sourceName: "",
+    method: "",
+    token: "",
+    storeUrl: "",
+    startDate: "",
+    syncType: "manual",
+    cron: "",
+  });
   useEffect(() => {
     const fetchSources = async () => {
       try {
@@ -53,7 +54,7 @@ const [formData, setFormData] = useState({
         _id: editData._id,
         sourceName: editData.sourceName || "",
         method: editData.method || "",
-         token: editData.token || "",
+        token: editData.token || "",
         storeUrl: editData.storeUrl || "",
         startDate: editData.startDate || "",
         syncType: editData.syncType || "manual",
@@ -64,8 +65,8 @@ const [formData, setFormData] = useState({
 
   const connectors = [
     { name: "Shopify", img: "/shopify.png", modal: "shopify" },
+    { name: "File Upload", img: "/files.png", modal: "files" },
     { name: "Facebook Marketing", img: "/facebook.png" },
-    { name: "File Upload", img: "/files.png" },
     { name: "Google Ads", img: "/googleads.png" },
     { name: "Google Sheets", img: "/sheets.png" },
     { name: "Google Analytics 4", img: "/analytics.png" },
@@ -98,7 +99,7 @@ const [formData, setFormData] = useState({
               setFormData({
                 sourceName: "",
                 method: "",
-                 token: "", 
+                token: "",
                 storeUrl: "",
                 startDate: "",
                 syncType: "manual",
@@ -217,7 +218,6 @@ const [formData, setFormData] = useState({
                                 setIsEditMode(true);
                                 setEditData(item);
                                 setActiveModal("shopify");
-                               
                               }}
                             />
                             <FaRegTrashAlt
@@ -244,13 +244,15 @@ const [formData, setFormData] = useState({
               setActiveModal(null);
               setIsEditMode(false);
               setEditData(null);
-               setActiveTab("sources");
+              setActiveTab("sources");
             }}
             isEditMode={isEditMode}
             formData={formData}
             setFormData={setFormData}
           />
         )}
+
+        {activeModal === "files" && <FileUploadModal  onClose={()=>setActiveModal(null)}/>}
 
         <DeleteModal
           isOpen={showDeleteModal}

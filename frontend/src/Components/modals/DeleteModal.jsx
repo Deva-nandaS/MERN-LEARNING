@@ -3,13 +3,13 @@ import { Button } from "../ui/Button";
 import { IoCloseSharp } from "react-icons/io5";
 import { LuTriangleAlert } from "react-icons/lu";
 
-export const DeleteModal = ({ isOpen, onClose, onConfirm, name }) => {
+export const DeleteModal = ({ isOpen, onClose, onConfirm, name, children }) => {
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
-      <div className="w-[450px] bg-white">
+      <div className="w-[500px] bg-white rounded shadow-lg flex flex-col">
         {/* HEADER */}
         <div className="flex justify-between items-center px-6 py-3 border-b bg-gray-100 rounded-t-lg">
-          <h2 className="text-xl font-bold">Delete Source</h2>
+          <h2 className="text-xl font-bold">Delete Data Source</h2>
           <button
             onClick={onClose}
             className="p-2 bg-red-700 text-white rounded hover:bg-red-800"
@@ -20,11 +20,13 @@ export const DeleteModal = ({ isOpen, onClose, onConfirm, name }) => {
 
         {/* CONTENT */}
         <div className="p-6 flex flex-col gap-4">
-          {/* Are you sure */}
           <p className="text-gray-700 text-base">
             Are you sure you want to delete{" "}
             <span className="font-semibold text-red-600">{name}</span>?
           </p>
+
+          {/* extra content from parent */}
+          {children}
 
           {/* Alert */}
           <div className="bg-red-100 border border-red-300 p-3 rounded flex items-center gap-2 text-red-600 font-bold text-sm">

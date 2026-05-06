@@ -1,5 +1,6 @@
 import { LuRefreshCcw } from "react-icons/lu";
 import { Input } from "../../ui/Input";
+import { FormError } from "../../ui/FormError";
 
 const Label = ({ text, required }) => (
   <label className="text-sm font-semibold">
@@ -18,7 +19,7 @@ export const SnowflakeForm = ({ formData, onChange, authType, setAuthType, error
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
         {/* BASIC FIELDS */}
         {[
-          { label: "Connection Name", name: "name" },
+          { label: "Name of connection", name: "name" },
           { label: "Account Identifier", name: "account" },
           { label: "Warehouse", name: "warehouse" },
           { label: "Database", name: "database" },
@@ -35,9 +36,7 @@ export const SnowflakeForm = ({ formData, onChange, authType, setAuthType, error
               placeholder={field.label}
               className="border border-gray-300 p-2 rounded w-full"
             />
-            {errors?.[field.name] && (
-              <p className="text-red-500 text-xs mt-1">{errors[field.name]}</p>
-            )}
+             <FormError message={errors?.[field.name]} />
           </div>
         ))}
 
@@ -82,9 +81,7 @@ export const SnowflakeForm = ({ formData, onChange, authType, setAuthType, error
               placeholder="Password"
               className="border border-gray-300 p-2 rounded w-full"
             />
-            {errors?.password && (
-              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-            )}
+             <FormError message={errors?.password} />
           </div>
         )}
 
@@ -101,9 +98,7 @@ export const SnowflakeForm = ({ formData, onChange, authType, setAuthType, error
                 placeholder="-----BEGIN RSA PRIVATE KEY-----"
                 className="border border-gray-300 p-2 rounded w-full font-mono text-xs"
               />
-              {errors?.privateKey && (
-                <p className="text-red-500 text-xs mt-1">{errors.privateKey}</p>
-              )}
+              <FormError message={errors?.privateKey} />
             </div>
             <div>
               <Label text="Private Key Passphrase" />
@@ -125,6 +120,9 @@ export const SnowflakeForm = ({ formData, onChange, authType, setAuthType, error
             <label>Schema</label>
             <select className="border border-gray-300 p-2 rounded w-full">
               <option>select schema</option>
+              <option>Public</option>
+            
+              
             </select>
           </div>
           <button
@@ -136,12 +134,7 @@ export const SnowflakeForm = ({ formData, onChange, authType, setAuthType, error
         </div>
       </div>
 
-      <button
-        type="submit"
-        className="w-full bg-fuchsia-900 text-white py-2 rounded mt-4"
-      >
-        Submit
-      </button>
+     
     </>
   );
 };

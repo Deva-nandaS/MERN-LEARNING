@@ -3,7 +3,9 @@ import { Breadcrumb } from "../Components/Breadcrumb";
 import { Button } from "../Components/ui/Button";
 import { PlatformsTable } from "../Components/Platforms/PlatformsTable";
 import { AddSourceModal } from "../Components/modals/AddSourceModal";
-import { DeleteSourceModal } from "../Components/modals/DeleteSourceModal";
+import { DeleteModal } from "../Components/modals/DeleteModal";
+import { CgDanger } from "react-icons/cg";
+
 import {
   getPlatforms,
   createPlatform,
@@ -151,14 +153,45 @@ export const Platforms = () => {
     const now = new Date();
     const updatedAt = `${now.toLocaleDateString()} ${now.toLocaleTimeString(
       [],
-      { hour: "2-digit", minute: "2-digit", second: "2-digit" }
+      { hour: "2-digit", minute: "2-digit" },
     )}`;
+
+    // clear irrelevant auth fields based on selection
+    const authCleanup =
+      selectedSource === "postgres"
+        ? authType === "password"
+          ? {
+              privateKey: "",
+              privateKeyPassphrase: "",
+              sslCert: "",
+              sslKey: "",
+            }
+          : { password: "", privateKey: "", privateKeyPassphrase: "" }
+        : selectedSource === "snowflake"
+          ? authType === "password"
+            ? {
+                privateKey: "",
+                privateKeyPassphrase: "",
+                sslCert: "",
+                sslKey: "",
+              }
+            : { password: "", sslCert: "", sslKey: "" }
+          : selectedSource === "bigquery"
+            ? {
+                password: "",
+                privateKey: "",
+                privateKeyPassphrase: "",
+                sslCert: "",
+                sslKey: "",
+              }
+            : {};
 
     const payload = {
       ...formData,
+      ...authCleanup,
       type: selectedSource,
       authType: selectedSource === "bigquery" ? "private_key" : authType,
-      updatedAt,
+      updatedAt, // ← kept as you wanted
       updatedBy: loggedInEmail,
     };
 
@@ -166,9 +199,7 @@ export const Platforms = () => {
       if (isEditMode) {
         const res = await updatePlatform(selectedItem._id, payload);
         setSources((prev) =>
-          prev.map((item) =>
-            item._id === selectedItem._id ? res.data : item
-          )
+          prev.map((item) => (item._id === selectedItem._id ? res.data : item)),
         );
       } else {
         const res = await createPlatform(payload);
@@ -184,12 +215,9 @@ export const Platforms = () => {
       console.error("Error saving platform:", error);
     }
   };
-
   const handleDelete = async () => {
     await deletePlatform(selectedItem._id);
-    setSources((prev) =>
-      prev.filter((item) => item._id !== selectedItem._id)
-    );
+    setSources((prev) => prev.filter((item) => item._id !== selectedItem._id));
     setShowDeleteModal(false);
   };
 
@@ -247,12 +275,39 @@ export const Platforms = () => {
           errors={errors}
         />
 
-        <DeleteSourceModal
+        <DeleteModal
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
-          selectedItem={selectedItem}
-          onDelete={handleDelete}
-        />
+          onConfirm={handleDelete}
+          name={selectedItem?.name}
+        >
+          {/* platforms specific extra content */}
+          <div className="flex items-center h-[80px] border bg-gray-100 rounded-md p-3">
+            <div className="w-[50px] h-[50px] bg-white rounded-md" />
+            <div className="ml-3">
+              <div className="font-semibold">{selectedItem?.name}</div>
+              <div className="text-gray-500">{selectedItem?.type}</div>
+              <div className="text-xs bg-gray-300 w-fit px-2 rounded">
+                ID: {selectedItem?._id}
+              </div>
+            </div>
+          </div>
+
+          <div className="text-base">
+            <p className="font-semibold">What will happen:</p>
+            <div className="text-gray-600 mt-2 space-y-2">
+              <div className="flex items-center gap-2">
+                <CgDanger /> Permanently remove this data source connection.
+              </div>
+              <div className="flex items-center gap-2">
+                <CgDanger /> Stop all active sync jobs for this source.
+              </div>
+              <div className="flex items-center gap-2">
+                <CgDanger /> Remove all associated sync history.
+              </div>
+            </div>
+          </div>
+        </DeleteModal>
       </div>
     </div>
   );

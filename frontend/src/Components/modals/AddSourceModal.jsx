@@ -1,4 +1,5 @@
 import { IoCloseSharp } from "react-icons/io5";
+import { BaseModal } from "../ui/Modal";
 import { PostgresForm } from "../Platforms/forms/PostgresForm";
 import { SnowflakeForm } from "../Platforms/forms/SnowflakeForm";
 import { BigQueryForm } from "../Platforms/forms/BigQueryForm";
@@ -16,14 +17,9 @@ export const AddSourceModal = ({
   setAuthType,
   errors,
 }) => {
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-      <div
-        className="bg-white w-full max-w-5xl mx-4 my-10 rounded-lg shadow-lg max-h-[90vh] flex flex-col overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <BaseModal isOpen={isOpen} onClose={onClose} maxWidth="max-w-5xl">
+    <div className="bg-white w-full max-w-5xl mx-4 my-10 rounded-lg shadow-lg h-[600px] flex flex-col overflow-hidden">
         {/* HEADER */}
         <div className="flex justify-between items-center px-6 py-3 border-b bg-gray-100">
           <h2 className="text-xl font-bold">
@@ -68,7 +64,7 @@ export const AddSourceModal = ({
           </div>
 
           {/* RIGHT CONTENT */}
-          <div className="flex-1 p-4 overflow-y-auto">
+          <div className="flex-1 p-4 overflow-y-auto min-h-[500px]">
             {selectedSource === "postgres" && (
               <PostgresForm
                 formData={formData}
@@ -94,9 +90,17 @@ export const AddSourceModal = ({
                 errors={errors}
               />
             )}
+             <button
+        type="submit"
+        className="w-1/2 bg-fuchsia-900 text-white py-2 rounded mt-4 ml-32"
+      >
+        Submit
+      </button>
           </div>
+          
         </form>
       </div>
-    </div>
+      
+    </BaseModal>
   );
 };

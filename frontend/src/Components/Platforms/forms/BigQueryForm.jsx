@@ -1,5 +1,6 @@
 import { LuRefreshCcw } from "react-icons/lu";
 import { Input } from "../../ui/Input";
+import { FormError } from "../../ui/FormError";
 
 const Label = ({ text, required }) => (
   <label className="text-sm font-semibold">
@@ -25,6 +26,7 @@ export const BigQueryForm = ({ formData, onChange, errors }) => (
       ].map((field, i) => (
         <div key={i}>
           <Label text={field.label} required={field.name !== "location"} />
+
           <Input
             name={field.name}
             value={formData[field.name] ?? ""}
@@ -33,15 +35,15 @@ export const BigQueryForm = ({ formData, onChange, errors }) => (
             placeholder={field.label}
             className="border border-gray-300 p-2 rounded w-full"
           />
-          {errors?.[field.name] && (
-            <p className="text-red-500 text-xs mt-1">{errors[field.name]}</p>
-          )}
+
+          <FormError message={errors?.[field.name]} />
         </div>
       ))}
 
       {/* SERVICE ACCOUNT JSON */}
       <div className="col-span-2">
         <Label text="Service Account JSON" required />
+
         <textarea
           name="serviceAccountJson"
           value={formData.serviceAccountJson ?? ""}
@@ -55,9 +57,8 @@ export const BigQueryForm = ({ formData, onChange, errors }) => (
 }`}
           className="border border-gray-300 p-2 rounded w-full font-mono text-xs"
         />
-        {errors?.serviceAccountJson && (
-          <p className="text-red-500 text-xs mt-1">{errors.serviceAccountJson}</p>
-        )}
+
+        <FormError message={errors?.serviceAccountJson} />
       </div>
 
       {/* OPTIONAL FETCH */}
@@ -68,6 +69,7 @@ export const BigQueryForm = ({ formData, onChange, errors }) => (
             <option>select dataset</option>
           </select>
         </div>
+
         <button
           type="button"
           className="flex items-center gap-2 border px-4 py-2 rounded"
@@ -77,11 +79,6 @@ export const BigQueryForm = ({ formData, onChange, errors }) => (
       </div>
     </div>
 
-    <button
-      type="submit"
-      className="w-full bg-fuchsia-900 text-white py-2 rounded mt-4"
-    >
-      Submit
-    </button>
+  
   </>
 );

@@ -1,0 +1,138 @@
+import { Button } from "../ui/Button";
+import { IoCloseSharp } from "react-icons/io5";
+import { useState, useEffect } from "react";
+import { BaseModal } from "../ui/Modal";
+
+export const FileUploadModal = ({ onClose }) => {
+  const [files, setFiles] = useState([]);
+  const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
+  const addFiles = (newFiles) => {
+    const mapped = newFiles.map((file) => ({
+      id: `${file.name}-${Date.now()}`,
+      name: file.name,
+      size: (file.size / 1024).toFixed(1) + " KB",
+      file,
+    }));
+    setFiles((prev) => {
+      const existingNames = prev.map((f) => f.name);
+      const filtered = mapped.filter((f) => !existingNames.includes(f.name));
+      return [...prev, ...filtered];
+    });
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    addFiles(Array.from(e.dataTransfer.files));
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => setIsDragging(false);
+
+  const handleBrowse = (e) => {
+    addFiles(Array.from(e.target.files));
+  };
+
+  const removeFile = (id) => {
+    setFiles((prev) => prev.filter((f) => f.id !== id));
+  };
+
+  return (
+    <BaseModal isOpen={true} onClose={onClose} maxWidth="max-w-[900px]">
+      <div
+        className="bg-white rounded-lg flex flex-col w-[95%] max-w-[900px] h-[95vh] md:w-[900px] md:h-[500px]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* HEADER */}
+        <div className="flex justify-between items-center px-6 py-3 border-b bg-gray-100 rounded-t-lg shrink-0">
+          <div className="flex items-center gap-2">
+            <img src="/files.png" alt="file" className="w-5 h-8" />
+            <h2 className="text-xl font-bold">Set up File Upload</h2>
+          </div>
+          <div className="text-xl cursor-pointer bg-red-700 text-white rounded hover:bg-red-800">
+            <IoCloseSharp onClick={onClose} />
+          </div>
+        </div>
+
+        {/* BODY */}
+        <div className="flex w-full h-full p-6 gap-6 overflow-hidden">
+
+          {/* LEFT — drop zone */}
+          <div
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            className={`flex-1 border-2 border-dashed rounded-lg flex flex-col items-center justify-center gap-3 transition ${
+              isDragging
+                ? "border-fuchsia-600 bg-fuchsia-50"
+                : "border-gray-300 bg-gray-50"
+            }`}
+          >
+            <img src="/files.png" alt="upload" className="w-10 h-10 opacity-40" />
+            <p className="text-gray-500 text-sm">Drag and drop files here</p>
+            <p className="text-gray-400 text-xs">or</p>
+            <label className="cursor-pointer bg-fuchsia-900 text-white px-4 py-2 rounded text-sm">
+              Browse Files
+              <input
+                type="file"
+                multiple
+                className="hidden"
+                onChange={handleBrowse}
+              />
+            </label>
+            <p className="text-xs text-gray-400">Supports: CSV, Excel, JSON</p>
+          </div>
+
+          {/* RIGHT — file list */}
+          <div className="w-[280px] flex flex-col gap-2 overflow-y-auto">
+            <p className="text-sm font-semibold text-gray-600">
+              {files.length} file{files.length !== 1 ? "s" : ""} selected
+            </p>
+
+            {files.length === 0 ? (
+              <p className="text-xs text-gray-400">No files added yet</p>
+            ) : (
+              files.map((f) => (
+                <div
+                  key={f.id}
+                  className="flex items-center justify-between border rounded-md px-3 py-2 bg-gray-50"
+                >
+                  <div className="flex flex-col overflow-hidden">
+                    <p className="text-sm font-medium truncate">{f.name}</p>
+                    <p className="text-xs text-gray-400">{f.size}</p>
+                  </div>
+                  <IoCloseSharp
+                    className="text-red-500 cursor-pointer shrink-0 ml-2"
+                    onClick={() => removeFile(f.id)}
+                  />
+                </div>
+              ))
+            )}
+
+            {files.length > 0 && (
+              <Button
+                text="Upload"
+                className="bg-fuchsia-900 text-white rounded px-4 py-2 text-sm mt-2"
+                onClick={() => console.log("upload", files)}
+              />
+            )}
+          </div>
+
+        </div>
+      </div>
+    </BaseModal>
+  );
+};
+
