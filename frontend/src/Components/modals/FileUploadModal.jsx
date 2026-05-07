@@ -67,20 +67,23 @@ export const FileUploadModal = ({ onClose }) => {
         </div>
 
         {/* BODY */}
-        <div className="flex w-full h-full p-6 gap-6 overflow-hidden">
-
-          {/* LEFT — drop zone */}
+        <div className="flex flex-col w-full flex-1 p-6 gap-4 overflow-hidden">
+          {/* TOP — drop zone */}
           <div
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
-            className={`flex-1 border-2 border-dashed rounded-lg flex flex-col items-center justify-center gap-3 transition ${
+            className={`w-full h-[200px] shrink-0 border-2 border-dashed rounded-lg flex flex-col items-center justify-center gap-3 transition ${
               isDragging
                 ? "border-fuchsia-600 bg-fuchsia-50"
                 : "border-gray-300 bg-gray-50"
             }`}
           >
-            <img src="/files.png" alt="upload" className="w-10 h-10 opacity-40" />
+            <img
+              src="/files.png"
+              alt="upload"
+              className="w-10 h-10 opacity-40"
+            />
             <p className="text-gray-500 text-sm">Drag and drop files here</p>
             <p className="text-gray-400 text-xs">or</p>
             <label className="cursor-pointer bg-fuchsia-900 text-white px-4 py-2 rounded text-sm">
@@ -92,11 +95,10 @@ export const FileUploadModal = ({ onClose }) => {
                 onChange={handleBrowse}
               />
             </label>
-            <p className="text-xs text-gray-400">Supports: CSV, Excel, JSON</p>
           </div>
 
-          {/* RIGHT — file list */}
-          <div className="w-[280px] flex flex-col gap-2 overflow-y-auto">
+          {/* BOTTOM — file list */}
+          <div className="flex flex-col gap-2 flex-1 overflow-y-auto">
             <p className="text-sm font-semibold text-gray-600">
               {files.length} file{files.length !== 1 ? "s" : ""} selected
             </p>
@@ -104,35 +106,40 @@ export const FileUploadModal = ({ onClose }) => {
             {files.length === 0 ? (
               <p className="text-xs text-gray-400">No files added yet</p>
             ) : (
-              files.map((f) => (
-                <div
-                  key={f.id}
-                  className="flex items-center justify-between border rounded-md px-3 py-2 bg-gray-50"
-                >
-                  <div className="flex flex-col overflow-hidden">
+              <div className="flex flex-wrap gap-2">
+                {files.map((f) => (
+                  <div
+                    key={f.id}
+                    className="relative flex flex-col border rounded-md px-3 py-2 bg-gray-50 w-fit"
+                  >
+                
+                    <div
+                      className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full cursor-pointer"
+                      onClick={() => removeFile(f.id)}
+                    >
+                      <IoCloseSharp size={14} />
+                    </div>
+
+                    {/* file info */}
                     <p className="text-sm font-medium truncate">{f.name}</p>
                     <p className="text-xs text-gray-400">{f.size}</p>
                   </div>
-                  <IoCloseSharp
-                    className="text-red-500 cursor-pointer shrink-0 ml-2"
-                    onClick={() => removeFile(f.id)}
-                  />
-                </div>
-              ))
+                ))}
+              </div>
             )}
 
             {files.length > 0 && (
-              <Button
-                text="Upload"
-                className="bg-fuchsia-900 text-white rounded px-4 py-2 text-sm mt-2"
-                onClick={() => console.log("upload", files)}
-              />
+              <div className="flex justify-center mt-5">
+                <Button
+                  text="Upload"
+                  className="bg-fuchsia-900 text-white rounded px-4 py-2 text-sm mt-2 w-64"
+                  onClick={() => console.log("upload", files)}
+                />
+              </div>
             )}
           </div>
-
         </div>
       </div>
     </BaseModal>
   );
 };
-

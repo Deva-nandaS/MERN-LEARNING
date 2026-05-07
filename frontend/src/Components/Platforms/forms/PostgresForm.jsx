@@ -19,8 +19,8 @@ export const PostgresForm = ({
 }) => {
   return (
     <>
-      <h2 className="text-xl font-bold">PostgreSQL Connection</h2>
-      <p className="text-sm text-gray-600 uppercase font-bold mt-3">
+      <h2 className="text-xl font-bold mt-3">PostgreSQL Connection</h2>
+      <p className="text-sm text-gray-600 uppercase font-bold mt-8">
         Connection Detail
       </p>
 
@@ -41,7 +41,7 @@ export const PostgresForm = ({
               onChange={onChange}
               type="text"
               placeholder={field.label}
-              className="border border-gray-300 p-2 rounded w-full"
+              className="border border-gray-300 p-2 rounded w-full mt-2"
             />
 
               <FormError message={errors?.[field.name]} />

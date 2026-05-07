@@ -19,7 +19,7 @@ export const AddSourceModal = ({
 }) => {
   return (
     <BaseModal isOpen={isOpen} onClose={onClose} maxWidth="max-w-5xl">
-    <div className="bg-white w-full max-w-5xl mx-4 my-10 rounded-lg shadow-lg h-[600px] flex flex-col overflow-hidden">
+      <div className="bg-white w-full max-w-5xl mx-4 my-10 rounded-lg shadow-lg h-[550px] flex flex-col overflow-hidden">
         {/* HEADER */}
         <div className="flex justify-between items-center px-6 py-3 border-b bg-gray-100">
           <h2 className="text-xl font-bold">
@@ -29,7 +29,7 @@ export const AddSourceModal = ({
             onClick={onClose}
             className="p-2 bg-red-700 text-white rounded hover:bg-red-800"
           >
-            <IoCloseSharp />
+            <IoCloseSharp/>
           </button>
         </div>
 
@@ -64,7 +64,7 @@ export const AddSourceModal = ({
           </div>
 
           {/* RIGHT CONTENT */}
-          <div className="flex-1 p-4 overflow-y-auto min-h-[500px]">
+          <div className="flex-1 p-4 px-8 overflow-y-auto min-h-[500px]">
             {selectedSource === "postgres" && (
               <PostgresForm
                 formData={formData}
@@ -90,17 +90,15 @@ export const AddSourceModal = ({
                 errors={errors}
               />
             )}
-             <button
-        type="submit"
-        className="w-1/2 bg-fuchsia-900 text-white py-2 rounded mt-4 ml-32"
-      >
-        Submit
-      </button>
+            <button
+              type="submit"
+              className="w-1/2 bg-fuchsia-900 text-white py-2 rounded mt-4 ml-32"
+            >
+              Submit
+            </button>
           </div>
-          
         </form>
       </div>
-      
     </BaseModal>
   );
 };

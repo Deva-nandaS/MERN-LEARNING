@@ -198,7 +198,7 @@ export const Sources = () => {
                         <td className="p-4 border">{item.method}</td>
                         <td className="p-4 border">
                           {item.syncType === "scheduled"
-                            ? item.cron || "Scheduled"
+                            ?  "Scheduled"
                             : "Manual"}
                         </td>
                         <td className="p-4 border">

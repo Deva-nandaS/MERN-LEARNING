@@ -11,12 +11,12 @@ const Label = ({ text, required }) => (
 
 export const BigQueryForm = ({ formData, onChange, errors }) => (
   <>
-    <h2 className="text-xl font-bold">BigQuery Connection</h2>
-    <p className="text-sm text-gray-600 uppercase font-bold mt-3">
+    <h2 className="text-xl font-bold mt-3">BigQuery Connection</h2>
+    <p className="text-sm text-gray-600 uppercase font-bold mt-8">
       Connection Details
     </p>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3 ">
       {/* BASIC FIELDS */}
       {[
         { label: "Connection Name", name: "name" },
@@ -33,7 +33,7 @@ export const BigQueryForm = ({ formData, onChange, errors }) => (
             onChange={onChange}
             type="text"
             placeholder={field.label}
-            className="border border-gray-300 p-2 rounded w-full"
+            className="border border-gray-300 p-2 rounded w-full mt-2"
           />
 
           <FormError message={errors?.[field.name]} />

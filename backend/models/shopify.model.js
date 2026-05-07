@@ -7,6 +7,7 @@ const shopifySchema = new mongoose.Schema(
     token: String,
     storeUrl: String,       
     syncType: String,
+    cron:String,
     startDate: {
   type: Date,
   default: () => new Date("2024-01-01")

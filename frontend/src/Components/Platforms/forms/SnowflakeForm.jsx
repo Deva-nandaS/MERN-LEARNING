@@ -11,8 +11,8 @@ const Label = ({ text, required }) => (
 export const SnowflakeForm = ({ formData, onChange, authType, setAuthType, errors }) => {
   return (
     <>
-      <h2 className="text-xl font-bold">Snowflake Connection</h2>
-      <p className="text-sm text-gray-600 uppercase font-bold mt-3">
+      <h2 className="text-xl font-bold mt-3">Snowflake Connection</h2>
+      <p className="text-sm text-gray-600 uppercase font-bold mt-8">
         Connection Details
       </p>
 
@@ -34,7 +34,7 @@ export const SnowflakeForm = ({ formData, onChange, authType, setAuthType, error
               onChange={onChange}
               type="text"
               placeholder={field.label}
-              className="border border-gray-300 p-2 rounded w-full"
+              className="border border-gray-300 p-2 rounded w-full mt-2"
             />
              <FormError message={errors?.[field.name]} />
           </div>

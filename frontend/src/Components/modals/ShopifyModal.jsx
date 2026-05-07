@@ -68,9 +68,12 @@ return (
           <img src="/shopify.png" alt="shopify" className="w-10 h-10" />
           <h2 className="text-xl font-bold">Set up Shopify</h2>
         </div>
-        <div className="text-xl cursor-pointer bg-red-700 text-white rounded hover:bg-red-800">
-          <IoCloseSharp onClick={onClose} />
-        </div>
+        <button
+            onClick={onClose}
+            className="p-2 bg-red-700 text-white rounded hover:bg-red-800"
+          >
+            <IoCloseSharp />
+          </button>
       </div>
 
       {/* STEP INDICATOR */}

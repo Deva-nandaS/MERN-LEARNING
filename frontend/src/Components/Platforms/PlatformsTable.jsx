@@ -31,6 +31,7 @@ export const PlatformsTable = ({ sources, onEdit, onDelete }) => (
               <td className="p-4 border border-gray-300">
                 {item.authType || "N/A"}
               </td>
+              
               <td className="p-4 border border-gray-300">{item.status}</td>
               <td className="p-4 border border-gray-300">{item.updatedBy}</td>
               <td className="p-4 border border-gray-300">
