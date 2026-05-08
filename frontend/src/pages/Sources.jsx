@@ -91,7 +91,6 @@ export const Sources = () => {
       <div className="p-4 sm:p-6 sm:ml-10 flex flex-col">
         <div className="flex border rounded-lg h-12 bg-white w-fit">
           <Button
-            text="Add New Source"
             onClick={() => {
               setActiveTab("add");
               setIsEditMode(false);
@@ -110,17 +109,21 @@ export const Sources = () => {
               activeTab === "add"
                 ? "bg-black text-white"
                 : "bg-white text-black"
-            }`}
-          />
+            }`}>
+              Add New Source
+          </Button>
+
           <Button
-            text="Sources"
+        
             onClick={() => setActiveTab("sources")}
             className={`px-6 py-2 font-bold text-sm uppercase rounded-r-lg ${
               activeTab === "sources"
                 ? "bg-black text-white"
                 : "bg-white text-black"
             }`}
-          />
+        >
+              Sources
+        </Button>
         </div>
 
         {activeTab === "add" && (

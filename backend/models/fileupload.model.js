@@ -2,10 +2,8 @@ const mongoose = require("mongoose");
 
 const fileuploadSchema = new mongoose.Schema(
   {
-    sourceName:String,
     fileName:String,
     fileSize:String,
-    fileType:String,
     filePath:String,
     uploadedBy:String,
     status:{

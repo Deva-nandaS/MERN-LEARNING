@@ -7,6 +7,8 @@ import { Sync } from "../Shopify/Sync";
 import { Review } from "../Shopify/Review";
 import { BaseModal } from "../ui/Modal";
 import { Button } from "../ui/Button";
+import { createSource, updateSource } from "../../api/shopify";
+
 
 const steps = [
   { label: "Connect", sub: "Authentication" },
@@ -32,29 +34,22 @@ export const ShopifyModal = ({
     };
   }, []);
 
-  const handleSubmit = async () => {
-     console.log("SUBMIT CLICKED"); 
-    try {
-      const url = isEditMode
-        ? `http://localhost:5000/api/shopify/${formData._id}`
-        : "http://localhost:5000/api/shopify";
+const handleSubmit = async () => {
+  try {
+    let data;
 
-      const method = isEditMode ? "PUT" : "POST";
-
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-      console.log(data);
-
-      setStep(5);
-    } catch (err) {
-      console.error(err);
+    if (isEditMode) {
+      data = await updateSource(formData._id, formData);
+    } else {
+      data = await createSource(formData);
     }
-  };
+
+    console.log(data);
+    setStep(5);
+  } catch (err) {
+    console.error(err);
+  }
+};
 return (
   <BaseModal isOpen={true} onClose={onClose} maxWidth="max-w-[900px]">
     <div
@@ -68,12 +63,12 @@ return (
           <img src="/shopify.png" alt="shopify" className="w-10 h-10" />
           <h2 className="text-xl font-bold">Set up Shopify</h2>
         </div>
-        <button
+        <Button
             onClick={onClose}
             className="p-2 bg-red-700 text-white rounded hover:bg-red-800"
           >
             <IoCloseSharp />
-          </button>
+          </Button>
       </div>
 
       {/* STEP INDICATOR */}

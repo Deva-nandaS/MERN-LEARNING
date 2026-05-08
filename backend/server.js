@@ -7,7 +7,7 @@ const authRoutes= require("./routes/authRoutes")
 const dashboardRoutes=require("./routes/dashboardRoutes")
 const shopifyRoutes = require("./routes/shopify.route");
 const platformRoutes = require("./routes/platform.route");
-
+const fileRoutes=require("./routes/upload.route")
 
 const app = express();
 
@@ -19,6 +19,7 @@ app.use("/api/auth",authRoutes);
 app.use("/api/dashboard",dashboardRoutes);
 app.use("/api/shopify", shopifyRoutes);
 app.use("/api/platforms", platformRoutes);
+app.use("/api/files",fileRoutes)
 
 
 mongoose.connect(process.env.MONGO_URI)
