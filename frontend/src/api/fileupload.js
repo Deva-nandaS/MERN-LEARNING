@@ -11,9 +11,12 @@ export const uploadFiles = async (files, uploadedBy = "dev") => {
 
   formData.append("uploadedBy", uploadedBy);
 
+  const token = localStorage.getItem("token"); 
+
   const res = await axios.post(API_URL, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`, 
     },
   });
 

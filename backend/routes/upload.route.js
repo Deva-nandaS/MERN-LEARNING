@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const FileUpload = require("../models/fileupload.model");
-
+const authMiddleware = require("../middleware/authMiddleware");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -13,13 +13,13 @@ const storage = multer.diskStorage({
   },
 });
 
-
 const fileFilter = (req, file, cb) => {
   const allowed = [
     "text/csv",
     "application/json",
     "application/vnd.ms-excel",
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/pdf",
   ];
   if (allowed.includes(file.mimetype)) {
     cb(null, true);
@@ -30,9 +30,12 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
-
-router.post("/", upload.array("files"), async (req, res) => {
+router.post("/", authMiddleware, upload.array("files"), async (req, res) => {
   try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: "No files received" });
+    }
+
     const savedFiles = await Promise.all(
       req.files.map((f) =>
         FileUpload.create({
@@ -40,21 +43,20 @@ router.post("/", upload.array("files"), async (req, res) => {
           fileSize: (f.size / 1024).toFixed(1) + " KB",
           fileType: f.mimetype,
           filePath: f.path,
-          uploadedBy: req.body.uploadedBy || "unknown",
-        })
-      )
+          uploadedBy: req.user.email, // now SAFE
+        }),
+      ),
     );
 
     res.status(201).json({
-      message: "Files uploaded successfully",
+      message: "Uploaded successfully",
       data: savedFiles,
     });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
-
-
 router.get("/", async (req, res) => {
   try {
     const data = await FileUpload.find();
@@ -63,7 +65,6 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 
 router.delete("/:id", async (req, res) => {
   try {

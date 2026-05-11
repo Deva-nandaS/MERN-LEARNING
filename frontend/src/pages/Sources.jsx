@@ -8,6 +8,7 @@ import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { DeleteModal } from "../Components/modals/DeleteModal";
 import { getSources, deleteSource } from "../api/shopify";
 import { FileUploadModal } from "../Components/modals/FileUploadModal";
+import {FacebookMarketingModal} from "../Components/modals/FacebookMarketingModal"
 
 export const Sources = () => {
   const [activeModal, setActiveModal] = useState(null);
@@ -66,7 +67,7 @@ export const Sources = () => {
   const connectors = [
     { name: "Shopify", img: "/shopify.png", modal: "shopify" },
     { name: "File Upload", img: "/files.png", modal: "files" },
-    { name: "Facebook Marketing", img: "/facebook.png" },
+    { name: "Facebook Marketing", img: "/facebook.png",modal:"facebookmarketing" },
     { name: "Google Ads", img: "/googleads.png" },
     { name: "Google Sheets", img: "/sheets.png" },
     { name: "Google Analytics 4", img: "/analytics.png" },
@@ -256,7 +257,19 @@ export const Sources = () => {
         )}
 
         {activeModal === "files" && <FileUploadModal  onClose={()=>setActiveModal(null)}/>}
-
+ {activeModal === "facebookmarketing" && (
+          <FacebookMarketingModal
+            onClose={() => {
+              setActiveModal(null);
+              setIsEditMode(false);
+              setEditData(null);
+              setActiveTab("sources");
+            }}
+            isEditMode={isEditMode}
+            formData={formData}
+            setFormData={setFormData}
+          />
+        )}
         <DeleteModal
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}

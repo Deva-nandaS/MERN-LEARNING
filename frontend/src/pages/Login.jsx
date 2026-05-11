@@ -14,7 +14,7 @@ export const Login = () => {
     try {
       const data = await loginUser(email, password);
       localStorage.setItem("token", data.data.token);
-       localStorage.setItem("user", JSON.stringify(data.data.user));
+      localStorage.setItem("user", JSON.stringify(data.data.user));
 
       alert(data.message);
       navigate("/dashboard");
@@ -80,10 +80,10 @@ export const Login = () => {
 
             {/* BUTTON */}
             <Button
-              text="SIGN IN"
+           
               type="submit"
               className="w-full bg-gray-900 text-white font-bold mt-2 rounded-lg py-2"
-            />
+            >SIGN IN </Button>
           </div>
 
           <div className="mt-auto text-center text-gray-300">

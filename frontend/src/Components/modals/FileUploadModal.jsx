@@ -7,7 +7,7 @@ import { uploadFiles } from "../../api/fileupload";
 
 export const FileUploadModal = ({ onClose }) => {
   const [files, setFiles] = useState([]);
-  const[isDragging,setIsDragging]=useState(false)
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -38,31 +38,31 @@ export const FileUploadModal = ({ onClose }) => {
     addFiles(Array.from(e.target.files));
   };
 
-  const handleDrop=(e)=>{
+  const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
-    addFiles(Array.from(e.dataTransfer.files))
-  }
+    addFiles(Array.from(e.dataTransfer.files));
+  };
 
-  const handleDragOver=(e)=>{
+  const handleDragOver = (e) => {
     e.preventDefault();
     setIsDragging(true);
-  }
+  };
 
-  const handleDragLeave=()=>{
-    setIsDragging(false)
-  }
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
 
-const handleUpload = async () => {
-  try {
-    const res = await uploadFiles(files, "dev");
-    console.log("Uploaded:", res);
-    setFiles([]);
-    alert("Upload successful!");
-  } catch (err) {
-    console.error("Upload failed:", err);
-  }
-};
+  const handleUpload = async (f) => {
+    try {
+      const res = await uploadFiles(files, "dev");
+      console.log("Uploaded:", res);
+      setFiles([]);
+      alert("Upload successful!");
+    } catch (err) {
+      console.error("Upload failed:", err);
+    }
+  };
 
   return (
     <BaseModal isOpen={true} onClose={onClose} maxWidth="max-w-[900px]">
@@ -71,11 +71,11 @@ const handleUpload = async () => {
       w-[95%] max-w-[900px] h-[95vh]
       md:w-[900px] md:h-[500px]"
       >
- <div className="flex justify-between items-center px-6 py-3 border-b bg-gray-100 rounded-t-lg shrink-0">
+        <div className="flex justify-between items-center px-6 py-3 border-b bg-gray-100 rounded-t-lg shrink-0">
           {/* header */}
           <div className="flex items-center gap-2 ">
             <img src="/files.png" alt="files" className="w-10 h-10" />
-           <h2 className="text-xl font-bold">Set up File Upload</h2>
+            <h2 className="text-xl font-bold">Set up File Upload</h2>
           </div>
           <Button
             onClick={onClose}
@@ -87,15 +87,13 @@ const handleUpload = async () => {
 
         {/* body */}
         <div className="flex flex-col p-3 justify-center items-center overflow-y-auto">
-          <div onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          className={`border border-dashed rounded-lg w-80 h-36 p-3 flex flex-col justify-center items-center mt-5
-            ${
-              isDragging ? "border-fuchsia-900":
-              "border-gray-500 "
-
-            }`} >
+          <div
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            className={`border border-dashed rounded-lg w-80 h-36 p-3 flex flex-col justify-center items-center mt-5
+            ${isDragging ? "border-fuchsia-900" : "border-gray-500 "}`}
+          >
             <p className="font-bold">Drag and drop files here</p>
             <p>or</p>
             <label className=" bg-fuchsia-900 p-2 text-white rounded mt-5">
@@ -108,7 +106,6 @@ const handleUpload = async () => {
               />
             </label>
           </div>
-              
 
           {/* file list */}
           <div className="flex flex-col flex-1 ">
@@ -135,17 +132,19 @@ const handleUpload = async () => {
                     </div>
                   ))}
                 </div>
-              
               </div>
             )}
-              <div className="flex justify-center py-4">
-                  <Button className=" bg-fuchsia-900 text-white px-10 py-2 rounded-lg w-64 "
-                  onClick={handleUpload}>Upload</Button>
-                </div>
+            <div className="flex justify-center py-4">
+              <Button
+                className=" bg-fuchsia-900 text-white px-10 py-2 rounded-lg w-64 "
+                onClick={handleUpload}
+              >
+                Upload
+              </Button>
+            </div>
           </div>
         </div>
-         </div>
-      
+      </div>
     </BaseModal>
   );
 };
