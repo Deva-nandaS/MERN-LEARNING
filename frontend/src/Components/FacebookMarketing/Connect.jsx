@@ -1,0 +1,165 @@
+import { FiKey } from "react-icons/fi";
+import { TiTick } from "react-icons/ti";
+import { LuShield } from "react-icons/lu";
+
+export const Connect = ({
+  formData,
+  setFormData,
+  error,
+  setError,
+  touched,
+  setTouched,
+}) => {
+  return (
+    <div className="flex flex-col w-full gap-3">
+      <div className="flex flex-col mt-0">
+        <p className="font-bold text-2xl">Connect Your Account</p>
+        <p className="text-base text-gray-500">
+          Choose how you want to authenticate with Facebook Marketing
+        </p>
+      </div>
+
+      <p className="text-sm text-gray-700 font-semibold mt-2">
+        Authentication Method
+      </p>
+
+      <div className="flex gap-4 mt-2">
+        {/* OAUTH */}
+        <div
+          onClick={() =>
+            setFormData({ ...formData, method: "oauth" })
+          }
+          className={`w-1/2 rounded border p-6 cursor-pointer transition ${
+            formData.method === "oauth"
+              ? "border-fuchsia-950 bg-purple-50"
+              : "bg-gray-100 text-gray-400 hover:border-gray-400"
+          }`}
+        >
+          <div
+            className={`w-10 h-10 rounded border p-2 flex items-center justify-center ${
+              formData.method === "oauth" ? "bg-white" : "bg-gray-200"
+            }`}
+          >
+            <FiKey
+              size={20}
+              className={
+                formData.method === "oauth"
+                  ? "text-black"
+                  : "text-gray-400"
+              }
+            />
+          </div>
+
+          <p className="font-bold mt-2">OAuth 2.0</p>
+
+          <div className="flex justify-between items-start mt-2">
+            <p
+              className={`text-sm ${
+                formData.method === "oauth"
+                  ? "text-gray-600"
+                  : "text-gray-400"
+              }`}
+            >
+              Connect your Facebook via OAuth
+            </p>
+
+            {formData.method === "oauth" && (
+              <div className="ml-2 bg-fuchsia-950 w-4 h-4 text-white rounded-full flex items-center justify-center">
+                <TiTick />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ACCESS TOKEN */}
+        <div
+          onClick={() =>
+            setFormData({ ...formData, method: "token" })
+          }
+          className={`w-1/2 rounded border p-4 cursor-pointer transition ${
+            formData.method === "token"
+              ? "border-fuchsia-950 bg-purple-50"
+              : "bg-gray-100 text-gray-400 hover:border-gray-400"
+          }`}
+        >
+          <div
+            className={`w-10 h-10 rounded border p-2 flex items-center justify-center ${
+              formData.method === "token" ? "bg-white" : "bg-gray-200"
+            }`}
+          >
+            <LuShield
+              size={20}
+              className={
+                formData.method === "token"
+                  ? "text-black"
+                  : "text-gray-400"
+              }
+            />
+          </div>
+
+          <p className="font-bold mt-2">Access Token</p>
+
+          <div className="flex justify-between items-start mt-2">
+            <p
+              className={`text-sm ${
+                formData.method === "token"
+                  ? "text-gray-600"
+                  : "text-gray-400"
+              }`}
+            >
+              Enter your Facebook access token manually
+            </p>
+
+            {formData.method === "token" && (
+              <div className="ml-2 bg-fuchsia-950 w-4 h-4 text-white rounded-full flex items-center justify-center">
+                <TiTick />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {formData.method === "token" && (
+        <div>
+          <label>Access Token</label>
+          <input
+            value={formData.token || ""}
+            onChange={(e) => {
+              setFormData({
+                ...formData,
+                token: e.target.value,
+              });
+              setError("");
+            }}
+            placeholder="Enter access token"
+                className="border border-gray-300 p-2.5 rounded-md w-full text-sm outline-none focus:ring-1 focus:ring-gray-400"
+          />
+
+          {touched && error && (
+            <p className="text-red-600 text-sm mt-1">
+              {error}
+            </p>
+          )}
+        </div>
+        
+      )}
+
+      <div>
+        <label>Ad Account ID</label>
+          <input
+            value={formData.token || ""}
+            onChange={(e) => {
+              setFormData({
+                ...formData,
+                token: e.target.value,
+              });
+              setError("");
+            }}
+            placeholder="Enter account ID"
+                 className="border border-gray-300 p-2.5 rounded-md w-full text-sm outline-none focus:ring-1 focus:ring-gray-400"
+          />
+
+      </div>
+    </div>
+  );
+};

@@ -29,7 +29,7 @@ export const AddSourceModal = ({
             onClick={onClose}
             className="p-2 bg-red-700 text-white rounded hover:bg-red-800"
           >
-            <IoCloseSharp/>
+            <IoCloseSharp />
           </button>
         </div>
 

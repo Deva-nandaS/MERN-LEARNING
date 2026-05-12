@@ -66,28 +66,25 @@ useEffect(() => {
     </div>
 
 <Button
-  text="Admin Settings"
+
   onClick={() => navigate("/dashboard/AdminSettings")}
-  className="w-full  bg-fuchsia-900 text-white px-4 py-2 rounded "
-/>
+  className="w-full  bg-fuchsia-900 text-white px-4 py-2 rounded ">
+Admin Settings</Button>
 
 
   <Button
-  text="Change password"
+
   onClick={() => navigate("/dashboard/ChangePassword")}
   className="w-full mt-3 bg-fuchsia-900 text-white px-4 py-2 rounded"
-/>
+>Change password</Button>
 
     <Button
-    text="Logout"
-      onClick={() => {
+          onClick={() => {
         localStorage.removeItem("token");
         navigate("/");
       }}
-      className="w-full mt-3 bg-red-700 text-white py-2 rounded-md"
-    />
-    
-
+      className="w-full mt-3 bg-red-700 text-white py-2 rounded-md">Logout</Button>
+  
   </div>
 )}
 

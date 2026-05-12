@@ -37,15 +37,18 @@ export const DeleteModal = ({ isOpen, onClose, onConfirm, name, children }) => {
           {/* Buttons */}
           <div className="flex justify-center gap-4 mt-2">
             <Button
-              text="Cancel"
               onClick={onClose}
               className="border rounded-md font-semibold bg-gray-100 text-black w-1/2 py-3 text-lg"
-            />
+            >
+              Cancel
+            </Button>
+            
             <Button
-              text="Delete"
               onClick={onConfirm}
               className="bg-red-600 text-white rounded-md font-bold w-1/2 py-3 text-lg"
-            />
+            >
+              Delete
+            </Button>
           </div>
         </div>
       </div>

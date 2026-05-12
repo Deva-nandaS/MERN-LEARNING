@@ -1,13 +1,14 @@
 import { Button } from "../ui/Button";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Input } from "../ui/Input";
 import { BaseModal } from "../ui/Modal";
 import { IoCloseSharp } from "react-icons/io5";
 import { uploadFiles } from "../../api/fileupload";
 
-export const FileUploadModal = ({ onClose }) => {
+export const FileUploadModal = ({ onClose, formData, setFormData }) => {
   const [files, setFiles] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -53,11 +54,14 @@ export const FileUploadModal = ({ onClose }) => {
     setIsDragging(false);
   };
 
-  const handleUpload = async (f) => {
+  const handleUpload = async (file) => {
     try {
       const res = await uploadFiles(files, "dev");
       console.log("Uploaded:", res);
       setFiles([]);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
       alert("Upload successful!");
     } catch (err) {
       console.error("Upload failed:", err);
@@ -86,35 +90,61 @@ export const FileUploadModal = ({ onClose }) => {
         </div>
 
         {/* body */}
-        <div className="flex flex-col p-3 justify-center items-center overflow-y-auto">
-          <div
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            className={`border border-dashed rounded-lg w-80 h-36 p-3 flex flex-col justify-center items-center mt-5
+
+        <div className="flex flex-col p-3 flex-1 overflow-y-auto">
+          <div className=" font-bold text-lg">
+            <p>Upload your files.</p>
+          </div>
+
+          <div className="flex flex-col">
+            {" "}
+            <label className="font-semibold text-sm mt-3">File name</label>
+            <input
+              value={formData?.sourceName || ""}
+              onChange={(e) =>
+                setFormData({
+                  ...FormData,
+                  sourceName: e.target.value,
+                })
+              }
+              placeholder="Enter file name "
+              className="  border border-gray-300 p-2.5 rounded-md text-sm outline-none focus:ring-1 focus:ring-gray-400"
+            ></input>
+          </div>
+          <div className="flex justify-center">
+            <div
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              className={`border border-dashed bg-fuchsia-100 rounded-lg w-96 h-52 p-3 flex flex-col justify-center items-center mt-5
             ${isDragging ? "border-fuchsia-900" : "border-gray-500 "}`}
-          >
-            <p className="font-bold">Drag and drop files here</p>
-            <p>or</p>
-            <label className=" bg-fuchsia-900 p-2 text-white rounded mt-5">
-              Browse
-              <Input
-                type="file"
-                multiple
-                className="hidden"
-                onChange={handleBrowse}
-              />
-            </label>
+            >
+              <img src="/files.png" alt="files" className="w-5 h-7"></img>
+              <p className="font-bold">Drag and drop files here</p>
+              <p>or</p>
+              <label className=" bg-fuchsia-900 p-2 text-white rounded mt-5">
+                Browse
+                <Input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={handleBrowse}
+                />
+              </label>
+
+              <p className="text-gray-600 text-sm mt-3">Supported formats: CSV, Excel files only.</p>
+            </div>
           </div>
 
           {/* file list */}
-          <div className="flex flex-col flex-1 ">
+          <div className="w-full mt-4">
             {files.length === 0 ? (
               <p className="text-sm mt-3 flex justify-center">
                 No files selected yet
               </p>
             ) : (
-              <div className="ml-3 mt-3 gap-4">
+              <div className="mt-3">
                 <h3 className="mt-3 font-bold">Uploaded files</h3>
                 <div className="flex gap-10 flex-wrap">
                   {files.map((file) => (
@@ -134,13 +164,18 @@ export const FileUploadModal = ({ onClose }) => {
                 </div>
               </div>
             )}
+
             <div className="flex justify-center py-4">
-              <Button
-                className=" bg-fuchsia-900 text-white px-10 py-2 rounded-lg w-64 "
-                onClick={handleUpload}
-              >
-                Upload
-              </Button>
+              {files.length > 0 ? (
+                <Button
+                  className=" bg-fuchsia-900 text-white px-10 py-2 rounded-lg w-64 "
+                  onClick={handleUpload}
+                >
+                  Upload
+                </Button>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </div>

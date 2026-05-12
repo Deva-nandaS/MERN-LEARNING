@@ -247,9 +247,9 @@ export const Platforms = () => {
               setErrors({});
               setShowAddModal(true);
             }}
-            text="Add Data Source"
+        
             className="bg-fuchsia-700 rounded px-4 py-2 text-white"
-          />
+          >Add Data Source</Button>
         </div>
 
         <PlatformsTable

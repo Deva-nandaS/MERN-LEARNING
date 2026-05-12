@@ -1,0 +1,21 @@
+Step 1 — Connect:
+Connection Name *
+Access Token *
+Ad Account ID *
+
+Step 2 — Configure:
+Start Date *
+End Date (optional)
+
+
+Step 3 — Select Streams:
+[ ] Campaigns
+[ ] Ad Sets
+[ ] Ads
+[ ] Ad Insights
+[ ] Ad Creatives
+
+Step 4 — Sync Schedule:
+Reuse CronScheduler
+
+Step 5 — Review

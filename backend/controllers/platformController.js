@@ -11,7 +11,7 @@ const sensitiveFields = [
 
 exports.create = async (req, res) => {
   try {
-    // clean empty strings
+    
     const cleaned = Object.fromEntries(
       Object.entries(req.body).filter(([_, v]) => v !== "")
     );
