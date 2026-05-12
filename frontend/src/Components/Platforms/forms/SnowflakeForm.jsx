@@ -4,11 +4,18 @@ import { FormError } from "../../ui/FormError";
 
 const Label = ({ text, required }) => (
   <label className="text-sm font-semibold">
-    {text}{required && <span className="text-red-500">*</span>}
+    {text}
+    {required && <span className="text-red-500">*</span>}
   </label>
 );
 
-export const SnowflakeForm = ({ formData, onChange, authType, setAuthType, errors }) => {
+export const SnowflakeForm = ({
+  formData,
+  onChange,
+  authType,
+  setAuthType,
+  errors,
+}) => {
   return (
     <>
       <h2 className="text-xl font-bold mt-3">Snowflake Connection</h2>
@@ -36,7 +43,7 @@ export const SnowflakeForm = ({ formData, onChange, authType, setAuthType, error
               placeholder={field.label}
               className="border border-gray-300 p-2 rounded w-full mt-2"
             />
-             <FormError message={errors?.[field.name]} />
+            <FormError message={errors?.[field.name]} />
           </div>
         ))}
 
@@ -81,7 +88,7 @@ export const SnowflakeForm = ({ formData, onChange, authType, setAuthType, error
               placeholder="Password"
               className="border border-gray-300 p-2 rounded w-full"
             />
-             <FormError message={errors?.password} />
+            <FormError message={errors?.password} />
           </div>
         )}
 
@@ -121,8 +128,6 @@ export const SnowflakeForm = ({ formData, onChange, authType, setAuthType, error
             <select className="border border-gray-300 p-2 rounded w-full">
               <option>select schema</option>
               <option>Public</option>
-            
-              
             </select>
           </div>
           <button
@@ -133,8 +138,6 @@ export const SnowflakeForm = ({ formData, onChange, authType, setAuthType, error
           </button>
         </div>
       </div>
-
-     
     </>
   );
 };

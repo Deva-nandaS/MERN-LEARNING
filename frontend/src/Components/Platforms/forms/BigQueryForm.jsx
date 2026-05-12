@@ -50,14 +50,13 @@ export const BigQueryForm = ({ formData, onChange, errors }) => (
           onChange={onChange}
           rows={6}
           placeholder={`{
-  "type": "service_account",
-  "project_id": "your-project-id",
-  "private_key": "-----BEGIN PRIVATE KEY-----\\n...",
-  "client_email": "your-service-account@project.iam.gserviceaccount.com"
-}`}
+            "type": "service_account",
+            "project_id": "your-project-id",
+            "private_key": "-----BEGIN PRIVATE KEY-----\\n...",
+            "client_email": "your-service-account@project.iam.gserviceaccount.com"
+            }`}
           className="border border-gray-300 p-2 rounded w-full font-mono text-xs"
         />
-
         <FormError message={errors?.serviceAccountJson} />
       </div>
 
@@ -78,7 +77,5 @@ export const BigQueryForm = ({ formData, onChange, errors }) => (
         </button>
       </div>
     </div>
-
-  
   </>
 );

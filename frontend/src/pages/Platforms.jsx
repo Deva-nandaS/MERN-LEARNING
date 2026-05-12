@@ -5,13 +5,7 @@ import { PlatformsTable } from "../Components/Platforms/PlatformsTable";
 import { AddSourceModal } from "../Components/modals/AddSourceModal";
 import { DeleteModal } from "../Components/modals/DeleteModal";
 import { CgDanger } from "react-icons/cg";
-
-import {
-  getPlatforms,
-  createPlatform,
-  updatePlatform,
-  deletePlatform,
-} from "../api/platforms";
+import {getPlatforms, createPlatform,updatePlatform,deletePlatform} from "../api/platforms";
 
 export const Platforms = () => {
   const [sources, setSources] = useState([]);
@@ -156,7 +150,7 @@ export const Platforms = () => {
       { hour: "2-digit", minute: "2-digit" },
     )}`;
 
-    // clear irrelevant auth fields based on selection
+
     const authCleanup =
       selectedSource === "postgres"
         ? authType === "password"
@@ -164,7 +158,7 @@ export const Platforms = () => {
               privateKey: "",
               privateKeyPassphrase: "",
               sslCert: "",
-              sslKey: "",
+              
             }
           : { password: "", privateKey: "", privateKeyPassphrase: "" }
         : selectedSource === "snowflake"
@@ -173,7 +167,7 @@ export const Platforms = () => {
                 privateKey: "",
                 privateKeyPassphrase: "",
                 sslCert: "",
-                sslKey: "",
+               
               }
             : { password: "", sslCert: "", sslKey: "" }
           : selectedSource === "bigquery"
@@ -182,7 +176,7 @@ export const Platforms = () => {
                 privateKey: "",
                 privateKeyPassphrase: "",
                 sslCert: "",
-                sslKey: "",
+                
               }
             : {};
 
@@ -191,7 +185,7 @@ export const Platforms = () => {
       ...authCleanup,
       type: selectedSource,
       authType: selectedSource === "bigquery" ? "private_key" : authType,
-      updatedAt, // ← kept as you wanted
+      updatedAt, 
       updatedBy: loggedInEmail,
     };
 
@@ -247,9 +241,10 @@ export const Platforms = () => {
               setErrors({});
               setShowAddModal(true);
             }}
-        
             className="bg-fuchsia-700 rounded px-4 py-2 text-white"
-          >Add Data Source</Button>
+          >
+            Add Data Source
+          </Button>
         </div>
 
         <PlatformsTable

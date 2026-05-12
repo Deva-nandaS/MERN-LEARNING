@@ -44,7 +44,7 @@ export const PostgresForm = ({
               className="border border-gray-300 p-2 rounded w-full mt-2"
             />
 
-              <FormError message={errors?.[field.name]} />
+            <FormError message={errors?.[field.name]} />
           </div>
         ))}
 
@@ -90,7 +90,7 @@ export const PostgresForm = ({
               className="border border-gray-300 p-2 rounded w-full"
             />
 
-             <FormError message={errors?.password} />
+            <FormError message={errors?.password} />
           </div>
         )}
 
@@ -108,7 +108,7 @@ export const PostgresForm = ({
                 className="border border-gray-300 p-2 rounded w-full font-mono text-xs"
               />
 
-                <FormError message={errors?.sslCert} />
+              <FormError message={errors?.sslCert} />
             </div>
           </>
         )}
@@ -119,7 +119,6 @@ export const PostgresForm = ({
             <label>Schema</label>
             <select className="border border-gray-300 p-2 rounded w-full">
               <option>select schema</option>
-          
             </select>
           </div>
           <button
@@ -130,8 +129,6 @@ export const PostgresForm = ({
           </button>
         </div>
       </div>
-
-     
     </>
   );
 };

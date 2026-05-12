@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-
+const FileUpload = require("../models/fileupload.model");
 const authMiddleware = require("../middleware/authMiddleware");
-const { create } = require("../controllers/fileUploadController");
+const { create,get } = require("../controllers/fileUploadController");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -23,16 +23,11 @@ const fileFilter = (req, file, cb) => {
 
   const allowedMimeTypes = [
     "text/csv",
-    "application/json",
-    "application/pdf",
-    "image/jpeg",
-    "image/jpg",
-    "image/png",
     "application/vnd.ms-excel",
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   ];
 
-  const allowedExtensions = [".csv", ".json", ".pdf", ".jpg", ".jpeg", ".png", ".xlsx", ".xls"];
+  const allowedExtensions = [".csv",".xlsx", ".xls"];
 
   const fileName = file.originalname.toLowerCase();
   const fileExtension = fileName.substring(fileName.lastIndexOf("."));
@@ -69,14 +64,7 @@ router.post(
   create
 );
 
-// router.get("/", async (req, res) => {
-//   try {
-//     const data = await FileUpload.find();
-//     res.json(data);
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// });
+router.get("/", authMiddleware, get);
 
 // router.delete("/:id", async (req, res) => {
 //   try {

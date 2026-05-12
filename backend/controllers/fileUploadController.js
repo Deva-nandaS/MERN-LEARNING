@@ -1,10 +1,8 @@
-const fileupload=require("../models/fileupload.model")
+const User = require("../models/User");
+const fileupload = require("../models/fileupload.model");
 
 exports.create = async (req, res) => {
   try {
-    console.log("FILES:", req.files);
-    console.log("USER:", req.user);
-
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
@@ -13,13 +11,17 @@ exports.create = async (req, res) => {
       return res.status(400).json({ message: "No files received" });
     }
 
+    const user = await User.findById(req.user.userId);
+
+    
     const savedFiles = await Promise.all(
       req.files.map(async (f) => {
         return await fileupload.create({
+          sourceName: req.body.sourceName,
           fileName: f.originalname,
           fileSize: (f.size / 1024).toFixed(1) + " KB",
           filePath: f.path,
-          uploadedBy: req.user.email,
+          uploadedBy: user?.email || req.user.userId,
         });
       })
     );
@@ -37,3 +39,11 @@ exports.create = async (req, res) => {
   }
 };
 
+exports.get = async (req, res) => {
+  try {
+    const data = await fileupload.find();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

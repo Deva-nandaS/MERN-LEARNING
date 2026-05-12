@@ -7,8 +7,9 @@ import { LuRefreshCcw } from "react-icons/lu";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { DeleteModal } from "../Components/modals/DeleteModal";
 import { getSources, deleteSource } from "../api/shopify";
+import { getFiles } from "../api/fileupload";
 import { FileUploadModal } from "../Components/modals/FileUploadModal";
-import {FacebookMarketingModal} from "../Components/modals/FacebookMarketingModal"
+import { FacebookMarketingModal } from "../Components/modals/FacebookMarketingModal";
 
 export const Sources = () => {
   const [activeModal, setActiveModal] = useState(null);
@@ -28,15 +29,30 @@ export const Sources = () => {
     token: "",
     storeUrl: "",
     startDate: "",
-    syncType: "manual",
+    syncType: "",
     cron: "",
   });
   useEffect(() => {
     const fetchSources = async () => {
       try {
         setLoading(true);
-        const data = await getSources();
-        setSources(data);
+        const shopifySources = await getSources();
+        const fileSources = await getFiles();
+        const formattedShopify = shopifySources.map((item) => ({
+          ...item,
+          type: "shopify",
+        }));
+        const formattedFiles = fileSources.map((file) => ({
+          _id: file._id,
+          sourceName: file.sourceName,
+          method: null,
+          syncType: null,
+          startDate: null,
+          type: "file",
+          fileName: file.fileName,
+        }));
+
+        setSources([...formattedShopify, ...formattedFiles]);
       } catch (err) {
         console.error(err);
       } finally {
@@ -67,7 +83,11 @@ export const Sources = () => {
   const connectors = [
     { name: "Shopify", img: "/shopify.png", modal: "shopify" },
     { name: "File Upload", img: "/files.png", modal: "files" },
-    { name: "Facebook Marketing", img: "/facebook.png",modal:"facebookmarketing" },
+    {
+      name: "Facebook Marketing",
+      img: "/facebook.png",
+      modal: "facebookmarketing",
+    },
     { name: "Google Ads", img: "/googleads.png" },
     { name: "Google Sheets", img: "/sheets.png" },
     { name: "Google Analytics 4", img: "/analytics.png" },
@@ -110,21 +130,21 @@ export const Sources = () => {
               activeTab === "add"
                 ? "bg-black text-white"
                 : "bg-white text-black"
-            }`}>
-              Add New Source
+            }`}
+          >
+            Add New Source
           </Button>
 
           <Button
-        
             onClick={() => setActiveTab("sources")}
             className={`px-6 py-2 font-bold text-sm uppercase rounded-r-lg ${
               activeTab === "sources"
                 ? "bg-black text-white"
                 : "bg-white text-black"
             }`}
-        >
-              Sources
-        </Button>
+          >
+            Sources
+          </Button>
         </div>
 
         {activeTab === "add" && (
@@ -202,8 +222,10 @@ export const Sources = () => {
                         <td className="p-4 border">{item.method}</td>
                         <td className="p-4 border">
                           {item.syncType === "scheduled"
-                            ?  "Scheduled"
-                            : "Manual"}
+                            ? "Scheduled"
+                            : item.syncType === "manual"
+                              ? "Manual"
+                              : "-"}
                         </td>
                         <td className="p-4 border">
                           {item.startDate
@@ -216,14 +238,33 @@ export const Sources = () => {
                               className="cursor-pointer text-gray-500"
                               onClick={() => console.log("refresh", item._id)}
                             />
+
                             <FaRegEdit
                               className="cursor-pointer"
                               onClick={() => {
                                 setIsEditMode(true);
                                 setEditData(item);
-                                setActiveModal("shopify");
+
+                                setFormData({
+                                  _id: item._id || "",
+                                  sourceName: item.sourceName || "",
+                                  method: item.method || "",
+                                  token: item.token || "",
+                                  storeUrl: item.storeUrl || "",
+                                  startDate: item.startDate || "",
+                                  syncType: item.syncType || "",
+                                  cron: item.cron || "",
+                                  fileName: item.fileName || "",
+                                });
+
+                                if (item.type === "file") {
+                                  setActiveModal("files");
+                                } else {
+                                  setActiveModal("shopify");
+                                }
                               }}
                             />
+
                             <FaRegTrashAlt
                               className="text-red-600 cursor-pointer"
                               onClick={() => {
@@ -244,20 +285,35 @@ export const Sources = () => {
 
         {activeModal === "shopify" && (
           <ShopifyModal
+            isEditMode={isEditMode}
             onClose={() => {
               setActiveModal(null);
               setIsEditMode(false);
               setEditData(null);
-              setActiveTab("sources");
             }}
-            isEditMode={isEditMode}
             formData={formData}
             setFormData={setFormData}
           />
         )}
 
-        {activeModal === "files" && <FileUploadModal  onClose={()=>setActiveModal(null)}/>}
- {activeModal === "facebookmarketing" && (
+        {activeModal === "files" && (
+          <FileUploadModal
+            isEditMode={isEditMode}
+            onClose={() => {
+              setActiveModal(null);
+              setFormData((prev) => ({ ...prev, sourceName: "" }));
+            }}
+            formData={formData}
+            setFormData={setFormData}
+            onUploadSuccess={(newSource) => {
+              setSources((prev) => [...prev, newSource]);
+              setActiveModal(null);
+              setFormData((prev) => ({ ...prev, sourceName: "" }));
+            }}
+          />
+        )}
+
+        {activeModal === "facebookmarketing" && (
           <FacebookMarketingModal
             onClose={() => {
               setActiveModal(null);

@@ -16,18 +16,16 @@ export const Breadcrumb = () => {
 
   return (
     <div className=" flex items-center gap-2 text-base pb-2">
-      <span
+      <p
         className="text-gray-500 cursor-pointer hover:text-black"
         onClick={() => navigate("/dashboard")}
       >
         FIG
-      </span>
+      </p>
 
-      <span className="text-gray-400">/</span>
+      <p className="text-gray-400">/</p>
 
-      <span className="font-semibold text-gray-900">
-        {currentPage}
-      </span>
+      <p className="font-semibold text-gray-900">{currentPage}</p>
     </div>
   );
 };
